@@ -71,6 +71,17 @@ const Products = ()=> {
         },
       },
       {
+        name: 'Price',
+        options: {
+          filter: true,
+          customBodyRender: (value, tableMeta) => {
+            const product = products[tableMeta.rowIndex];
+            const price = product.price;
+            return price ? 'KES '+ price : '';
+          },
+        },
+      },
+      {
         name: 'Availability',
         options: {
           filter: true,

@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from "react";
-import { Box, Button, Fab, Icon, IconButton, styled } from '@mui/material';
+import { Box, Button, Fab, Icon, IconButton, styled,useTheme,Alert,Snackbar, FormControl, InputLabel, NativeSelect, MenuItem, Select } from '@mui/material';
 import { SimpleCard } from "app/components";
 import MUIDataTable from "mui-datatables";
 import axios from "axios.js";
@@ -8,6 +8,15 @@ import { Navigate } from 'react-router-dom';
 
 // import EditUser from "./edituser";
 
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { setDayWithOptions } from "date-fns/fp";
+import MessageAlert from "../assets/MessageAlert";
 const Container = styled("div")(({ theme }) => ({
     margin: "20px",
     [theme.breakpoints.down("sm")]: { margin: "16px" },
@@ -22,7 +31,20 @@ const SubCategories = ()=> {
   const [subcategories, setSubCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const columns = [
-    
+    {
+      name: 'Category',
+      options: {
+        filter: true,
+        setHeaderStyle: {
+            fontWeight: 'bold',
+          },
+        customBodyRender: (value, tableMeta) => {
+          const subcat = subcategories[tableMeta.rowIndex];
+          const cat = subcat.category?subcat.category:'';
+          return cat.category_name ? cat.category_name : '';         
+        },
+      },
+    },
     {
       name: 'Sub-Category Code',
       options: {
@@ -31,9 +53,9 @@ const SubCategories = ()=> {
             fontWeight: 'bold',
           },
         customBodyRender: (value, tableMeta) => {
-          const product = subcategories[tableMeta.rowIndex];
-          const image = product.subcategory_code?product.subcategory_code:'';
-          return image ? image : '';         
+          const subcat = subcategories[tableMeta.rowIndex];
+          const cat = subcat.subcategory_code?subcat.subcategory_code:'';
+          return cat ? cat : '';         
         },
       },
     },
@@ -114,12 +136,82 @@ const SubCategories = ()=> {
       setLoading(false);
     }
   };
+  const [open, setOpen] = useState(false);
+  const [subcategoryCode, setSubCategoryCode] = useState('');
+  const [subcategoryname, setSubCategoryName] = useState('');
+  const [message, setMessage] = useState('');
+  const [alertMessage, setOpenAlert]  = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState('');
+  const [opensnack, setOpenSnack] = useState(false);
+
+  const AddItemButton = ({ onClick }) => (
+    <IconButton className="button" color="success" aria-label="Success" onClick={onClick}>
+        <Icon>add</Icon>
+    </IconButton>
+  );
+  const handleClickOpen = () => {
+      fetchCategories();
+      setOpen(true);
+
+  };
+  const openSnack = ()=>{
+    setOpenAlert(true);
+  }
+  const handleCloseSNack = () => {
+    setOpenSnack(false);
+};
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleSave = async() => {
+    const response = await axios.post("/api/subcategories/create",{
+      "category_id":category,"subcategory_code":subcategoryCode,"subcategory_name":subcategoryname
+    });
+    if(response.status===200){
+      console.log("Response...",response.data);
+      setMessage(response.data.message);
+      setOpen(false);
+
+      fetchSubCategories();
+      setOpenSnack(true);
+      setSubCategoryCode('');
+      setSubCategoryName('');
+      setCategory('');
+
+    }
+  };
+  const fetchCategories = async () =>{
+    try{
+      const response = await axios.get('/api/categories/all');
+      if(response.status===200){
+        setCategories(response.data.data);
+        setLoading(false);
+        console.log("response ",response.data.data);
+        console.log("Categories ",categories);
+        
+
+      }else{
+        alert("Products categories could not be fetched");
+      }
+  
+    }catch(error){
+      console.log("There was an error in fetching categories",error)
+      setLoading(false);
+    }
+  };
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
 
   const options = {
     filterType: 'checkbox',
     responsive:'standard',
     setHeaderStyle: {
       fontWeight: 'bold',
+    },
+    customToolbar: () => {
+      return <AddItemButton onClick={handleClickOpen} />;
     },
   };
   
@@ -137,6 +229,67 @@ const SubCategories = ()=> {
           )
           
         }
+        {/* start modal */}
+        <div>
+        <Dialog fullScreen={fullScreen} open={open} onClose={handleClose}>
+          <DialogTitle>New Sub-Category</DialogTitle>
+          <DialogContent>
+            <FormControl fullWidth>
+              <InputLabel id="label">
+                Select Category
+              </InputLabel>
+              <Select 
+              sx={{ m: 1 }} 
+              labelId="label" 
+              id="select" 
+              label="Category" 
+              onChange={e => {
+                setCategory(e.target.value)
+            }}
+              >
+                {categories.map((category) => (
+                  <MenuItem key={category.id} value={category.id}>{category.category_name}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <TextField fullWidth 
+            id="outlined-basic" 
+            label="Sub-Category Code" 
+            variant="outlined" 
+            sx={{ m: 1 }} 
+            value={subcategoryCode}
+            onChange={e => {
+                setSubCategoryCode(e.target.value)
+            }}
+            
+            />
+            <TextField fullWidth 
+            id="outlined-basic" 
+            label="Description" 
+            variant="outlined" 
+            sx={{ m: 1}} 
+            value={subcategoryname}
+            onChange={e => {
+                setSubCategoryName(e.target.value)
+            }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleSave}>Save</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+      {/* end modal */}
+      {/* message alert */}
+      <MessageAlert
+      open={opensnack}
+      onClose={handleCloseSNack}
+      message={message}
+      severity={'success'}
+      />
+
+      {/* end message alert */}
                 
         </Container>
     );

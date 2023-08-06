@@ -189,6 +189,7 @@ const Categories = ()=> {
           )
           
         }
+        {/* start modal */}
         <div>
         <Dialog fullScreen={fullScreen} open={open} onClose={handleClose}>
           <DialogTitle>New Category</DialogTitle>
@@ -221,11 +222,14 @@ const Categories = ()=> {
           </DialogActions>
         </Dialog>
       </div>
+      {/* end modal */}
+      {/* message alert */}
       <Snackbar open={opensnack} autoHideDuration={6000} onClose={handleCloseSNack}>
-  <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-    {message}
-  </Alert>
-</Snackbar>
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+          {message}
+        </Alert>
+      </Snackbar>
+      {/* end message alert */}
         </Container>
     );
 }
