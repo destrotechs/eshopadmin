@@ -5,7 +5,7 @@ import MUIDataTable from "mui-datatables";
 import axios from "axios.js";
 import {StyledButton} from "../material-kit/buttons/buttonBase";
 import { Navigate } from 'react-router-dom';
-
+import Modal from "../assets/Modal";
 // import EditUser from "./edituser";
 
 const Container = styled("div")(({ theme }) => ({
@@ -167,16 +167,89 @@ const Products = ()=> {
       setLoading(false);
     }
   };
+  const [open, setOpen] = useState(false);
 
+  const AddItemButton = ({ onClick }) => (
+    <IconButton className="button" color="success" aria-label="Success" onClick={onClick}>
+        <Icon>add</Icon>
+    </IconButton>
+  );
+  const handleOpenModal = () => {
+    setOpen(true);
+};
+const handleCloseModal = () => {
+  fetchProducts();
+  setOpen(false);
+};
   const options = {
     filterType: 'checkbox',
     responsive:'standard',
     setHeaderStyle: {
       fontWeight: 'bold',
     },
+    customToolbar: () => {
+      return <AddItemButton onClick={handleOpenModal} />;
+    },
   };
-  
+  const fields = [
+    {
+      id:'Subcategory',
+      field_type:'select',
+      span:12,
+      name:'subcategory_id',
+      source:{url:'/api/subcategories/all',value:'id',name:'subcategory_name'},
+    },
+    {
+      id:'Product Code',
+      field_type:'text',
+      span:6,
+      name:"product_code"
+    },
+    {
+      id:'Name',
+      field_type:'text',
+      span:6,
+      name:"common_name"
+    },
+    {
+      id:'Brand',
+      field_type:'text',
+      span:6,
+      name:"brand"
+    },
+    {
+      id:'Model',
+      field_type:'text',
+      span:6,
+      name:"model"
+    },
+    {
+      id:'Size',
+      field_type:'text',
+      span:6,
+      name:"size"
+    },
+    {
+      id:'Description',
+      field_type:'text',
+      span:6,
+      name:'description'
+    },
+    {
+      id:'Price',
+      field_type:'text',
+      span:6,
+      name:"price",
+    },
+    {
+      id:'Options',
+      field_type:'text',
+      span:6,
+      name:"options",
+    },
+  ]
 
+  const modal_actions = {method:'post',url:'/api/products/create'}
 
     return (
         <Container>
@@ -190,7 +263,7 @@ const Products = ()=> {
           )
           
         }
-                
+           <Modal open={open} onClose={handleCloseModal} title={"Add New Product"} form_fields={fields} actions={modal_actions}/>     
         </Container>
     );
 }

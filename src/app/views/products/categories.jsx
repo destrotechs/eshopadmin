@@ -15,7 +15,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { setDayWithOptions } from "date-fns/fp";
-
+import Modal from "../assets/Modal";
 
 const Container = styled("div")(({ theme }) => ({
     margin: "20px",
@@ -176,6 +176,22 @@ const Categories = ()=> {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
+  const fields = [
+    {
+      id:'Category Code',
+      field_type:'text',
+      span:12,
+      name:"category_code"
+    },
+    {
+      id:'Category Name',
+      field_type:'text',
+      span:12,
+      name:"category_name"
+    },
+    
+  ];
+  const modal_actions = {method:'post',url:'/api/categories/create'}
 
     return (
         <Container>
@@ -191,46 +207,12 @@ const Categories = ()=> {
         }
         {/* start modal */}
         <div>
-        <Dialog fullScreen={fullScreen} open={open} onClose={handleClose}>
-          <DialogTitle>New Category</DialogTitle>
-          <DialogContent>
-            <TextField fullWidth 
-            id="outlined-basic" 
-            label="Category Code" 
-            variant="outlined" 
-            sx={{ m: 1 }} 
-            value={categoryCode}
-            onChange={e => {
-                setCategoryCode(e.target.value)
-            }}
-            
-            />
-            <TextField fullWidth 
-            id="outlined-basic" 
-            label="Description" 
-            variant="outlined" 
-            sx={{ m: 1}} 
-            value={categoryname}
-            onChange={e => {
-                setCategoryName(e.target.value)
-            }}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleSave}>Save</Button>
-          </DialogActions>
-        </Dialog>
+      <Modal open={open} onClose={handleClose} title={"New Category"} form_fields={fields} actions={modal_actions}/>     
+        
       </div>
-      {/* end modal */}
-      {/* message alert */}
-      <Snackbar open={opensnack} autoHideDuration={6000} onClose={handleCloseSNack}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-          {message}
-        </Alert>
-      </Snackbar>
-      {/* end message alert */}
-        </Container>
+
+
+    </Container>
     );
 }
 
