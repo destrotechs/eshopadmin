@@ -7,7 +7,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { setDayWithOptions } from "date-fns/fp";
-import { Grid,Box, Button, Fab, Icon, IconButton, styled,useTheme,Alert,Snackbar, FormControl, InputLabel, NativeSelect, MenuItem, Select } from '@mui/material';
+import { Grid,Box, Button, Fab, Icon, IconButton, styled,useTheme,Alert,Snackbar, FormControl, InputLabel, NativeSelect, MenuItem, Select,Autocomplete } from '@mui/material';
 import CurrencyFormatter from "./currency";
 import axios from "axios.js";
 
@@ -64,6 +64,7 @@ function Field({field_type,span,id,value=null,onChange,name,source={}}){
     }
     else if(field_type==='select'){
         return(
+            <>
 
                 <Grid item xs={12} sm={4} md={span} className="mt-2">
                   <FormControl fullWidth>
@@ -84,6 +85,7 @@ function Field({field_type,span,id,value=null,onChange,name,source={}}){
                   </FormControl>
                
                 </Grid>
+                </>
 
         )
     }

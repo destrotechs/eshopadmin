@@ -47,24 +47,7 @@ const Categories = ()=> {
     const handleClose = () => {
       setOpen(false);
     };
-    const handleCloseSNack = () => {
-        setOpenSnack(false);
-    };
     
-    const handleSave = async ()=>{
-        const response = await axios.post('/api/categories/create', {
-            'category_code':categoryCode,'category_name':categoryname
-        });
-        console.log("RES ",response.status);
-        setCategoryCode('');
-        setCategoryName('');	
-        if(response.status===200){
-            setMessage(response.data.message);
-            fetchCategories();
-            setOpenSnack(true);
-            setOpen(false);
-        }
-    }
   const columns = [
     
     {
