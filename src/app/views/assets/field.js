@@ -11,9 +11,9 @@ import { Grid,Box, Button, Fab, Icon, IconButton, styled,useTheme,Alert,Snackbar
 import CurrencyFormatter from "./currency";
 import axios from "axios.js";
 
-function Field({field_type,span,id,value=null,onChange,name,source={}}){
+function Field({field_type,span,id,value=null,onChange,name,source={},field_data={}}){
     const [sourcedata,setSourcedata] = useState([]);
-    
+    console.log("VALUE",value)
     const fetchData = async (url)=> {
         if(url){
             const response = await axios.get(url);
@@ -73,7 +73,8 @@ function Field({field_type,span,id,value=null,onChange,name,source={}}){
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
                       label={id}
-                      value={value || ''}
+                        value={value || ''}
+
                         onChange={(e) => onChange(name, e.target.value)}
                 
                     >

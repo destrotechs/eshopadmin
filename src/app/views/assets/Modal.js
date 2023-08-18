@@ -15,7 +15,8 @@ import Field from "./field";
 import MessageAlert from "./MessageAlert";
 
 function Modal({ open, onClose, title=null, content=null, actions={},form_fields=[] }){
-    const [fields, setFields] = useState(form_fields);
+    console.log("Form Fields",form_fields);
+  const [fields, setFields] = useState(form_fields);
     const [formData, setFormData] = useState({});
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -58,7 +59,7 @@ function Modal({ open, onClose, title=null, content=null, actions={},form_fields
           <DialogContent>
           <Grid container spacing={2}>
             {form_fields.map((field,index)=>(
-              <Field key={index} {...field} onChange={handleFieldChange} value={formData[field.name]}/>
+              <Field key={index} {...field} onChange={handleFieldChange} value={field.value?field.value:formData[field.name]}/>
             ))}
             </Grid>
           </DialogContent>

@@ -16,7 +16,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { setDayWithOptions } from "date-fns/fp";
 import Modal from "../assets/Modal";
-
+import ConfirmDeleteDialog from "../assets/confirmdeletedialog";
 const Container = styled("div")(({ theme }) => ({
     margin: "20px",
     [theme.breakpoints.down("sm")]: { margin: "16px" },
@@ -76,47 +76,86 @@ const Categories = ()=> {
         return description ? description : '';
         },
     },
-    }
+    },
     
-    // {
-    //   name: 'Actions',
-    //   options: {
-    //     filter: false,
-    //     sort: false,
-    //     empty: true,
-    //     customBodyRender: (value, tableMeta) => {
-    //       const user = users[tableMeta.rowIndex];
-    //       const userid = user.id;
+    {
+      name: 'Actions',
+      options: {
+        filter: false,
+        sort: false,
+        empty: true,
+        customBodyRender: (value, tableMeta) => {
+          const item = categories[tableMeta.rowIndex];
+          const itemid = item.id;
 
-    //       return (
-    //         <div>
-    //           <IconButton className="button" onClick={() => handleEditClick(user)} color="primary" aria-label="Edit">
-    //             <Icon>edit</Icon>
-    //           </IconButton>
+          return (
+            <div>
+              <IconButton className="button" onClick={() => handleEditClick(item)} color="primary" aria-label="Edit">
+                <Icon>edit</Icon>
+              </IconButton>
               
-    //            <IconButton className="button" color="error" aria-label="Delete">
-    //             <Icon>delete</Icon>
-    //           </IconButton>
+               <IconButton className="button" color="error" onClick={() => handleDeleteClick(item)} aria-label="Delete">
+                <Icon>delete</Icon>
+              </IconButton>
              
               
-    //         </div>
-    //       );
-    //     },
-    //   },
-    // },
+            </div>
+          );
+        },
+      },
+    },
     // Add more columns as needed
   ];
+  const fields = [
+    {
+      id:'Category Code',
+      field_type:'text',
+      span:12,
+      name:"category_code"
+    },
+    {
+      id:'Category Name',
+      field_type:'text',
+      span:12,
+      name:"category_name"
+    },
+    
+  ];
+  const modal_actions = {method:'post',url:'/api/categories/create'};
+  const [title,setTitle]=useState("New Category");
+  const [data,setFieldData]=useState({});
   const [edit,goToEdit] = useState(false);
-  const handleEditClick = (user) => {
-    goToEdit(true);
-    // console.log("ID",customerid);
-    // const userid = customerid; // Replace with the actual user ID you want to edit
-    // navigate('/user/edit',{state:userid});
-    console.log("User ",user);
-    if(goToEdit){
-      return <Navigate to="/users/edit"/>;
-    }
+  const [opendelete,setOpenDelete] = useState(false);
+
+  const [form_fields,setFields] = useState(fields)
+  const [itemToDelete,setItemToDelete] = useState({})
+
+  const handleEditClick = (item) => {
+    console.log("Editing.........",item)
+    fields.map((field)=>{
+      if(item.hasOwnProperty(field.name)){
+        field["value"] = item[field.name]
+        console.log("New field",field)     
+      }
+        
+    })
+    setFields(fields);
+    setFieldData(item)
+    setTitle("Edit Category");
+    setOpen(true)
   };
+
+  const handleDeleteClick = (item) => {
+    setOpenDelete(true)
+    setItemToDelete(item)
+  }
+  const closeDelete = () => {
+    setOpenDelete(false)
+  }
+  const handleOnDelete = () => {
+    //logic to delete
+    console.log("ITEM TO DELETE",itemToDelete)
+  }
   const AddItemButton = ({ onClick }) => (
     <IconButton className="button" color="success" aria-label="Success" onClick={onClick}>
         <Icon>add</Icon>
@@ -132,10 +171,6 @@ const Categories = ()=> {
       if(response.status===200){
         setCategories(response.data.data);
         setLoading(false);
-        console.log("response ",response.data.data);
-        console.log("Products ",categories);
-        
-
       }else{
         alert("Products categories could not be fetched");
       }
@@ -159,22 +194,7 @@ const Categories = ()=> {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  const fields = [
-    {
-      id:'Category Code',
-      field_type:'text',
-      span:12,
-      name:"category_code"
-    },
-    {
-      id:'Category Name',
-      field_type:'text',
-      span:12,
-      name:"category_name"
-    },
-    
-  ];
-  const modal_actions = {method:'post',url:'/api/categories/create'}
+ 
 
     return (
         <Container>
@@ -190,8 +210,13 @@ const Categories = ()=> {
         }
         {/* start modal */}
         <div>
-      <Modal open={open} onClose={handleClose} title={"New Category"} form_fields={fields} actions={modal_actions}/>     
-        
+      <Modal open={open} onClose={handleClose} title={title} form_fields={form_fields} actions={modal_actions} field_data={{...data}}/>     
+      <ConfirmDeleteDialog
+        open={opendelete}
+        onClose={closeDelete}
+        onDelete={handleOnDelete}
+        itemName={itemToDelete.id}
+      />
       </div>
 
 
