@@ -4,9 +4,12 @@ import { SimpleCard } from "app/components";
 import MUIDataTable from "mui-datatables";
 import axios from "axios.js";
 import {StyledButton} from "../material-kit/buttons/buttonBase";
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Modal from "../assets/Modal";
+// import { useHistory } from 'react-router-dom';
 // import EditUser from "./edituser";
+import ConfirmDeleteDialog from "../assets/confirmdeletedialog";
+import MessageAlert from "../assets/MessageAlert";
 
 const Container = styled("div")(({ theme }) => ({
     margin: "20px",
@@ -87,8 +90,8 @@ const Products = ()=> {
           filter: true,
           customBodyRender: (value, tableMeta) => {
             const product = products[tableMeta.rowIndex];
-            const available = product.availability;
-            return available ? available : '';
+            const available = product.stock;
+            return available>0 ? `In stock (${available})` : 'Out Of Stock';
           },
         },
       },
@@ -104,44 +107,43 @@ const Products = ()=> {
         },
       },
     
-    // {
-    //   name: 'Actions',
-    //   options: {
-    //     filter: false,
-    //     sort: false,
-    //     empty: true,
-    //     customBodyRender: (value, tableMeta) => {
-    //       const user = users[tableMeta.rowIndex];
-    //       const userid = user.id;
+    {
+      name: 'Actions',
+      options: {
+        filter: false,
+        sort: false,
+        empty: true,
+        customBodyRender: (value, tableMeta) => {
+          const product = products[tableMeta.rowIndex];
+          const productid = product.id;
 
-    //       return (
-    //         <div>
-    //           <IconButton className="button" onClick={() => handleEditClick(user)} color="primary" aria-label="Edit">
-    //             <Icon>edit</Icon>
-    //           </IconButton>
+          return (
+            <div>
+              <IconButton className="button" onClick={() => handleEditClick(product)} color="primary" aria-label="Edit">
+                <Icon>edit</Icon>
+              </IconButton>
               
-    //            <IconButton className="button" color="error" aria-label="Delete">
-    //             <Icon>delete</Icon>
-    //           </IconButton>
+               <IconButton className="button" onClick={() => handleDeleteClick(product)} color="error" aria-label="Delete">
+                <Icon>delete</Icon>
+              </IconButton>
              
               
-    //         </div>
-    //       );
-    //     },
-    //   },
-    // },
+            </div>
+          );
+        },
+      },
+    },
     // Add more columns as needed
   ];
+  const navigate = useNavigate();
   const [edit,goToEdit] = useState(false);
-  const handleEditClick = (user) => {
-    goToEdit(true);
-    // console.log("ID",customerid);
-    // const userid = customerid; // Replace with the actual user ID you want to edit
-    // navigate('/user/edit',{state:userid});
-    console.log("User ",user);
-    if(goToEdit){
-      return <Navigate to="/users/edit"/>;
-    }
+  const handleEditClick = (product) => {
+    // navigate('/edit');
+    // goToEdit(true);
+    console.log("Product ",product);
+    // if(goToEdit){
+    //   return <Navigate to="/users/edit"/>;
+    // }
   };
 
 
@@ -177,10 +179,39 @@ const Products = ()=> {
   const handleOpenModal = () => {
     setOpen(true);
 };
+const [opendelete,setOpenDelete] = useState(false);
+const [severity,setSeverity] = useState('success')
+
+const [itemToDelete,setItemToDelete] = useState({})
 const handleCloseModal = () => {
   fetchProducts();
   setOpen(false);
 };
+const handleDeleteClick = (item) => {
+  setOpenDelete(true)
+  setItemToDelete(item)
+}
+const closeDelete = () => {
+  setOpenDelete(false)
+}
+const [opensnack, setOpenSnack] = useState(false);
+
+  const [message, setMessage] = useState('');
+  const handleCloseSNack = () => {
+      setOpenSnack(false);
+  };
+  const handleOpenSNack = () => {
+      setOpenSnack(true);
+  };
+const handleOnDelete = async() => {
+  //logic to delete
+  const response = await axios.delete('/api/product/'+itemToDelete.id);
+  if(response.status===200){
+    setMessage(response.data.message)
+    setOpenSnack(true)
+    fetchProducts()
+  }
+}
   const options = {
     filterType: 'checkbox',
     responsive:'standard',
@@ -263,6 +294,18 @@ const handleCloseModal = () => {
           )
           
         }
+        <ConfirmDeleteDialog
+        open={opendelete}
+        onClose={closeDelete}
+        onDelete={handleOnDelete}
+        itemName={itemToDelete.id}
+      />
+       <MessageAlert
+        open={opensnack}
+        onClose={handleCloseSNack}
+        message={message}
+        severity={severity}
+      />
            <Modal open={open} onClose={handleCloseModal} title={"Add New Product"} form_fields={fields} actions={modal_actions}/>     
         </Container>
     );

@@ -14,16 +14,19 @@ import axios from "axios.js";
 import Field from "./field";
 import MessageAlert from "./MessageAlert";
 
-function Modal({ open, onClose, title=null, content=null, actions={},form_fields=[] }){
-    console.log("Form Fields",form_fields);
-  const [fields, setFields] = useState(form_fields);
+function Modal({ open, onClose, title=null, content=null, actions={},form_fields=[],isEditMode=false }){
+    const [fields, setFields] = useState(form_fields);
     const [formData, setFormData] = useState({});
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-    
+    const [severity,setSeverity] = useState('success')
     const [opensnack, setOpenSnack] = useState(false);
     const [message, setMessage] = useState('');
-    
+    // if(isEditMode){
+    //   fields.map((field)=>{
+    //     setFormData({field.name:field.value})
+    //   });
+    // }
     const handleCloseSNack = () => {
         setOpenSnack(false);
     };
@@ -35,7 +38,7 @@ function Modal({ open, onClose, title=null, content=null, actions={},form_fields
           ...prevData,
           [fieldName]: value,
       }));
-      console.log(formData, value)
+      console.log("form data",formData, value)
 
     };
 
@@ -48,6 +51,7 @@ function Modal({ open, onClose, title=null, content=null, actions={},form_fields
       const response = await axios[actions.method](actions.url, formData);
       console.log("Server Response ",response);
       setFormData({})
+      setSeverity('success')
       setMessage(response.data.message);
       setOpenSnack(true);
 
@@ -59,7 +63,7 @@ function Modal({ open, onClose, title=null, content=null, actions={},form_fields
           <DialogContent>
           <Grid container spacing={2}>
             {form_fields.map((field,index)=>(
-              <Field key={index} {...field} onChange={handleFieldChange} value={field.value?field.value:formData[field.name]}/>
+              <Field key={index} {...field} onChange={handleFieldChange} value={formData[field.name]}/>
             ))}
             </Grid>
           </DialogContent>
@@ -72,7 +76,7 @@ function Modal({ open, onClose, title=null, content=null, actions={},form_fields
         open={opensnack}
         onClose={handleCloseSNack}
         message={message}
-        severity={'success'}
+        severity={severity}
       />
       </div>
     );

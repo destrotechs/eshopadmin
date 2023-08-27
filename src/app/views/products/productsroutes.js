@@ -5,6 +5,7 @@ import { lazy } from 'react';
 const Products =  Loadable(lazy(() => import('./allproducts')));
 const Categories =  Loadable(lazy(() => import('./categories')));
 const SubCategories =  Loadable(lazy(() => import('./subcategories')));
+const EditBox =  Loadable(lazy(() => import('../assets/editor')));
 
 const productRoutes = [
     {
@@ -19,6 +20,7 @@ const productRoutes = [
       path: '/subcategories/all',
       element:<SubCategories/>,
     },
+    
     
 ];
 export default productRoutes;

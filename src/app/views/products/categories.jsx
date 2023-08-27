@@ -17,6 +17,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { setDayWithOptions } from "date-fns/fp";
 import Modal from "../assets/Modal";
 import ConfirmDeleteDialog from "../assets/confirmdeletedialog";
+
+
+import MessageAlert from "../assets/MessageAlert";
+
 const Container = styled("div")(({ theme }) => ({
     margin: "20px",
     [theme.breakpoints.down("sm")]: { margin: "16px" },
@@ -39,7 +43,12 @@ const Categories = ()=> {
   const [categoryname, setCategoryName] = useState('');
   const [categoryCode, setCategoryCode] = useState('');
   const [message, setMessage] = useState('');
-
+  const handleCloseSNack = () => {
+      setOpenSnack(false);
+  };
+  const handleOpenSNack = () => {
+      setOpenSnack(true);
+  };
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -126,6 +135,7 @@ const Categories = ()=> {
   const [data,setFieldData]=useState({});
   const [edit,goToEdit] = useState(false);
   const [opendelete,setOpenDelete] = useState(false);
+  const [severity,setSeverity] = useState('success')
 
   const [form_fields,setFields] = useState(fields)
   const [itemToDelete,setItemToDelete] = useState({})
@@ -152,9 +162,14 @@ const Categories = ()=> {
   const closeDelete = () => {
     setOpenDelete(false)
   }
-  const handleOnDelete = () => {
+  const handleOnDelete = async() => {
     //logic to delete
-    console.log("ITEM TO DELETE",itemToDelete)
+    const response = await axios.delete('/api/category/'+itemToDelete.id);
+    if(response.status===200){
+      setMessage(response.data.message)
+      setOpenSnack(true)
+      fetchCategories()
+    }
   }
   const AddItemButton = ({ onClick }) => (
     <IconButton className="button" color="success" aria-label="Success" onClick={onClick}>
@@ -218,7 +233,12 @@ const Categories = ()=> {
         itemName={itemToDelete.id}
       />
       </div>
-
+      <MessageAlert
+        open={opensnack}
+        onClose={handleCloseSNack}
+        message={message}
+        severity={severity}
+      />
 
     </Container>
     );
