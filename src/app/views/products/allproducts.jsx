@@ -138,7 +138,7 @@ const Products = ()=> {
   const navigate = useNavigate();
   const [edit,goToEdit] = useState(false);
   const handleEditClick = (product) => {
-    navigate('/edit/product/'+product.id);
+    
     // goToEdit(true);
     console.log("Product ",product);
     // if(goToEdit){
