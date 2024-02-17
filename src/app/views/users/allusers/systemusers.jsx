@@ -5,9 +5,9 @@ import MUIDataTable from 'mui-datatables';
 import axios from 'axios.js';
 import { StyledButton } from '../../material-kit/buttons/buttonBase';
 import { Navigate } from 'react-router-dom';
-
+import all_fields_array from 'app/views/assets/allfields';
 import EditUser from './edituser';
-
+import Modal from '../../assets/Modal';
 const Container = styled('div')(({ theme }) => ({
   margin: '20px',
   [theme.breakpoints.down('sm')]: { margin: '16px' },
@@ -17,10 +17,26 @@ const Container = styled('div')(({ theme }) => ({
   },
 }));
 
-const AppUsers = () => {
+const SystemUsers = () => {
   // const navigate = useNavigate();
   const [users, setUsers] = useState([]);
+  const [fields, setFields] = useState(all_fields_array[0]);
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [modal_actions, setModalActions] = useState({ method: 'post', url: '/api/users/register' });
+
+  const AddItemButton = ({ onClick }) => (
+    <IconButton className="button" color="success" aria-label="Success" onClick={onClick}>
+      <Icon>add</Icon>
+    </IconButton>
+  );
+  const handleOpenModal = () => {
+    setOpen(true);
+  };
+  const handleCloseModal = () => {
+    fetchUsers();
+    setOpen(false);
+  };
   const columns = [
     {
       name: 'Name',
@@ -44,41 +60,40 @@ const AppUsers = () => {
         },
       },
     },
+
     {
-      name: 'Shipping Address',
+      name: 'User Type',
       options: {
         filter: true,
         customBodyRender: (value, tableMeta) => {
-          const customer = users[tableMeta.rowIndex];
-          const address = customer.addresses
-            ? customer.addresses.map((address) => address.shipping_address)
-            : '';
-          return address ? address.join(' || ') : '';
+          const user = users[tableMeta.rowIndex];
+          const type = user.usertype ? user.usertype.user_type_name : '';
+          return type ? type : '';
         },
       },
     },
     {
-      name: 'Preferred Payment',
+      name: 'User Rights',
       options: {
         filter: true,
         customBodyRender: (value, tableMeta) => {
-          const customer = users[tableMeta.rowIndex];
-          const preferredPayment = customer.profile ? customer.profile.preferred_payment : '';
-          return preferredPayment ? preferredPayment : '';
+          const user = users[tableMeta.rowIndex];
+          const rights = user.rights ? user.rights.map((right) => right.right_to) : '';
+          return rights ? rights.join(' || ') : '';
         },
       },
     },
-    {
-      name: 'Phone Number',
-      options: {
-        filter: true,
-        customBodyRender: (value, tableMeta) => {
-          const customer = users[tableMeta.rowIndex];
-          const phoneNumber = customer.profile ? customer.profile.phone_number : '';
-          return phoneNumber ? phoneNumber : '';
-        },
-      },
-    },
+    // {
+    //   name: 'Phone Number',
+    //   options: {
+    //     filter: true,
+    //     customBodyRender: (value, tableMeta) => {
+    //       const customer = users[tableMeta.rowIndex];
+    //       const phoneNumber = customer.profile ? customer.profile.phone_number : '';
+    //       return phoneNumber ? phoneNumber : '';
+    //     },
+    //   },
+    // },
     {
       name: 'Actions',
       options: {
@@ -124,7 +139,7 @@ const AppUsers = () => {
   }, []);
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('/api/customers');
+      const response = await axios.get('/api/users');
       if (response.status === 200) {
         setUsers(response.data.data);
         setLoading(false);
@@ -145,6 +160,9 @@ const AppUsers = () => {
     setHeaderStyle: {
       fontWeight: 'bold',
     },
+    customToolbar: () => {
+      return <AddItemButton onClick={handleOpenModal} />;
+    },
   };
 
   return (
@@ -152,10 +170,17 @@ const AppUsers = () => {
       {loading ? (
         <div>Loading...</div>
       ) : (
-        <MUIDataTable title={'All Customers'} data={users} columns={columns} options={options} />
+        <MUIDataTable title={'All System Users'} data={users} columns={columns} options={options} />
       )}
+      <Modal
+        open={open}
+        onClose={handleCloseModal}
+        title={'Add New User'}
+        form_fields={fields}
+        actions={modal_actions}
+      />
     </Container>
   );
 };
 
-export default AppUsers;
+export default SystemUsers;

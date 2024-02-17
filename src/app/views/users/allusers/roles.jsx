@@ -5,9 +5,9 @@ import MUIDataTable from 'mui-datatables';
 import axios from 'axios.js';
 import { StyledButton } from '../../material-kit/buttons/buttonBase';
 import { Navigate } from 'react-router-dom';
-
+import all_fields_array from 'app/views/assets/allfields';
 import EditUser from './edituser';
-
+import Modal from '../../assets/Modal';
 const Container = styled('div')(({ theme }) => ({
   margin: '20px',
   [theme.breakpoints.down('sm')]: { margin: '16px' },
@@ -17,68 +17,39 @@ const Container = styled('div')(({ theme }) => ({
   },
 }));
 
-const AppUsers = () => {
+const Roles = () => {
   // const navigate = useNavigate();
   const [users, setUsers] = useState([]);
+  const [fields, setFields] = useState(all_fields_array[1]);
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [modal_actions, setModalActions] = useState({ method: 'post', url: '/api/roles' });
+
+  const AddItemButton = ({ onClick }) => (
+    <IconButton className="button" color="success" aria-label="Success" onClick={onClick}>
+      <Icon>add</Icon>
+    </IconButton>
+  );
+  const handleOpenModal = () => {
+    setOpen(true);
+  };
+  const handleCloseModal = () => {
+    fetchUserTypes();
+    setOpen(false);
+  };
   const columns = [
     {
-      name: 'Name',
+      name: 'Role Name',
       options: {
         filter: true,
         customBodyRender: (value, tableMeta) => {
-          const customer = users[tableMeta.rowIndex];
-          const name = customer.name;
+          const role = users[tableMeta.rowIndex];
+          const name = role.role_name;
           return name ? name : '';
         },
       },
     },
-    {
-      name: 'Email',
-      options: {
-        filter: true,
-        customBodyRender: (value, tableMeta) => {
-          const customer = users[tableMeta.rowIndex];
-          const email = customer.email;
-          return email ? email : '';
-        },
-      },
-    },
-    {
-      name: 'Shipping Address',
-      options: {
-        filter: true,
-        customBodyRender: (value, tableMeta) => {
-          const customer = users[tableMeta.rowIndex];
-          const address = customer.addresses
-            ? customer.addresses.map((address) => address.shipping_address)
-            : '';
-          return address ? address.join(' || ') : '';
-        },
-      },
-    },
-    {
-      name: 'Preferred Payment',
-      options: {
-        filter: true,
-        customBodyRender: (value, tableMeta) => {
-          const customer = users[tableMeta.rowIndex];
-          const preferredPayment = customer.profile ? customer.profile.preferred_payment : '';
-          return preferredPayment ? preferredPayment : '';
-        },
-      },
-    },
-    {
-      name: 'Phone Number',
-      options: {
-        filter: true,
-        customBodyRender: (value, tableMeta) => {
-          const customer = users[tableMeta.rowIndex];
-          const phoneNumber = customer.profile ? customer.profile.phone_number : '';
-          return phoneNumber ? phoneNumber : '';
-        },
-      },
-    },
+
     {
       name: 'Actions',
       options: {
@@ -120,11 +91,11 @@ const AppUsers = () => {
   };
 
   useEffect(() => {
-    fetchUsers();
+    fetchUserTypes();
   }, []);
-  const fetchUsers = async () => {
+  const fetchUserTypes = async () => {
     try {
-      const response = await axios.get('/api/customers');
+      const response = await axios.get('/api/user/roles');
       if (response.status === 200) {
         setUsers(response.data.data);
         setLoading(false);
@@ -145,6 +116,9 @@ const AppUsers = () => {
     setHeaderStyle: {
       fontWeight: 'bold',
     },
+    customToolbar: () => {
+      return <AddItemButton onClick={handleOpenModal} />;
+    },
   };
 
   return (
@@ -152,10 +126,17 @@ const AppUsers = () => {
       {loading ? (
         <div>Loading...</div>
       ) : (
-        <MUIDataTable title={'All Customers'} data={users} columns={columns} options={options} />
+        <MUIDataTable title={'All System Roles'} data={users} columns={columns} options={options} />
       )}
+      <Modal
+        open={open}
+        onClose={handleCloseModal}
+        title={'Create New Role'}
+        form_fields={fields}
+        actions={modal_actions}
+      />
     </Container>
   );
 };
 
-export default AppUsers;
+export default Roles;

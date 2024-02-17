@@ -33,45 +33,76 @@ export const navigations = [
   //     { name: 'Table', path: '/material/table', iconText: 'T' },
   //   ],
   // },
-  { label: 'Management', type: 'label' },
+  { label: 'System Administration', type: 'label' },
+
   {
-    name: 'Customers',
-    icon: 'peopleAltIcon',
+    name: 'Users',
+    icon: 'AttributionAltIcon',
     children: [
-      { name: 'Customers List',
-       path: '/users/all', 
-       iconText: 'C',
-       icon:'peopleAltIcon'
+      {
+        name: 'Roles',
+        iconText: 'T',
+        path: '/roles',
+        icon: 'cautionAltIcon',
+        icon: 'user',
       },
-      { name: 'Order List',
-       path: '/orders/all', 
-       iconText: 'O',
-       icon:'cartAltIcon'
-      }
+      {
+        name: 'Rights',
+        iconText: 'T',
+        path: '/rights/all',
+        icon: 'cautionAltIcon',
+        icon: 'user',
+      },
+      {
+        name: 'Role Rights',
+        iconText: 'R',
+        path: '/role/rights',
+        // icon: 'cautionAltIcon',
+        icon: 'user',
+      },
+      {
+        name: 'User and Roles',
+        iconText: 'R',
+        path: '/user/roles',
+        // icon: 'cautionAltIcon',
+        icon: 'user',
+      },
+      {
+        name: 'System Users',
+        iconText: 'T',
+        path: '/users/all',
+        icon: 'peopleAltIcon',
+      },
     ],
   },
+  { label: 'Customer Management', type: 'label' },
+  { name: 'Customers', path: '/customers/all', iconText: 'C', icon: 'personAltIcon' },
+
+  { name: 'Orders', path: '/orders/all', iconText: 'O', icon: 'cartAltIcon' },
+
+  { label: 'Product Management', type: 'label' },
   {
     name: 'Products',
     icon: 'inventoryAltIcon',
     children: [
-      { 
+      {
         name: 'Category List',
-        path: '/categories/all', 
+        path: '/categories/all',
         iconText: 'C',
-        icon:'categoryAltIcon' 
+        icon: 'categoryAltIcon',
       },
-      { 
+      {
         name: 'Sub-Category List',
-        path: '/subcategories/all', 
+        path: '/subcategories/all',
         iconText: 'C',
-        icon:'categoryAltIcon' 
+        icon: 'categoryAltIcon',
       },
-      { 
+      {
         name: 'Products List',
-        path: '/products/all', 
+        path: '/products/all',
         iconText: 'C',
-        icon:'listAltIcon' 
-      }
+        icon: 'listAltIcon',
+      },
     ],
   },
   {
