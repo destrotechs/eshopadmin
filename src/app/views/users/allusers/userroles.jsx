@@ -125,8 +125,6 @@ const UserRoles = () => {
   const navigate = useNavigate();
   const [edit, goToEdit] = useState(false);
   const handleEditClick = (user) => {
-    goToEdit(true);
-    console.log('Usercccc ', user);
     return navigate('/user/edit/' + user.id);
   };
 
@@ -139,8 +137,6 @@ const UserRoles = () => {
       if (response.status === 200) {
         setUsers(response.data.data);
         setLoading(false);
-        console.log('response ', response.data.data);
-        console.log('Users ', users);
       } else {
         alert('Users could not be fetched');
       }

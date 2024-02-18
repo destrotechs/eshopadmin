@@ -67,12 +67,12 @@ export const navigations = [
         // icon: 'cautionAltIcon',
         icon: 'user',
       },
-      {
-        name: 'System Users',
-        iconText: 'T',
-        path: '/users/all',
-        icon: 'peopleAltIcon',
-      },
+      // {
+      //   name: 'System Users',
+      //   iconText: 'T',
+      //   path: '/users/all',
+      //   icon: 'peopleAltIcon',
+      // },
     ],
   },
   { label: 'Customer Management', type: 'label' },

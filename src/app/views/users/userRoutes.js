@@ -40,7 +40,7 @@ const userRoutes = [
     element: <Orders />,
   },
   {
-    path: '/user/edit/:user',
+    path: '/user/edit/:id',
     element: <EditUser />,
   },
 ];

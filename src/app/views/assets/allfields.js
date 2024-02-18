@@ -46,7 +46,7 @@ const all_fields_array = [
       field_type: 'select',
       span: 12,
       name: 'role_id',
-      source: { url: '/api/user/roles', value: 'id', name: 'role_name' },
+      source: { url: '/api/users/roles', value: 'id', name: 'role_name' },
     },
     {
       id: 'Right',
@@ -113,7 +113,7 @@ const all_fields_array = [
       field_type: 'select',
       span: 12,
       name: 'role_id',
-      source: { url: '/api/user/roles', value: 'id', name: 'role_name' },
+      source: { url: '/api/users/roles', value: 'id', name: 'role_name' },
     },
   ],
 ];

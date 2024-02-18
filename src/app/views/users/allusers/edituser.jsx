@@ -30,6 +30,11 @@ import Select from '@mui/material/Select';
 import MUIDataTable from 'mui-datatables';
 import Stack from '@mui/material/Stack';
 import axios from 'axios.js';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
 import { StyledButton } from '../../material-kit/buttons/buttonBase';
 import { useNavigate, useParams } from 'react-router-dom';
 import Modal from '../../assets/Modal';
@@ -42,6 +47,15 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+// import { Visibility, VisibilityOff } from '@material-ui/icons';
+// import { InputAdornment } from '@material-ui/core';
+import InputAdornment from '@mui/material/InputAdornment';
+import FormHelperText from '@mui/material/FormHelperText';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import UserProfileForm from './userprofile';
+import UserCredentials from './usercredentials';
 const Container = styled('div')(({ theme }) => ({
   margin: '20px',
   [theme.breakpoints.down('sm')]: { margin: '16px' },
@@ -63,31 +77,62 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const EditUser = () => {
-  const { user } = useParams();
-  console.log('Userrrrrrr ', user.name);
+  useEffect(() => {
+    fetchUser();
+    // fetchSubCategories();
+    // fetchStocks();
+  }, []);
+
+  const userId = useParams();
   const [value, setValue] = React.useState('1');
+  const [user, setUser] = useState({});
+  const [see, setSee] = useState(false);
+  const [inputType, setInputType] = useState('password');
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
+
+  const fetchUser = async () => {
+    const response = await axios.get('/api/user/' + userId.id);
+    if (response.status === 200) {
+      console.log('User Info', response);
+      setUser(response.data.data);
+    } else {
+      console.error('User could not be fetched');
+    }
+  };
+
   return (
     <Container>
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <TabList onChange={handleChange} aria-label="lab API tabs example">
-            <Tab label="Product Details" value="1" />
-            <Tab label="Product Images" value="2" />
-            <Tab label="product STOCKs" value="3" />
+            <Tab label="Credentials" value="1" />
+            <Tab label="Profile" value="2" />
+            <Tab label="Orders" value="3" />
+            <Tab label="Roles" value="4" />
           </TabList>
         </Box>
         <TabPanel value="1">
-          <Paper elevation={3} style={{ padding: '10px' }}></Paper>
+          <Grid item xs={12}>
+            <Paper elevation={3} style={{ padding: '10px', display: 'flex', alignItems: 'center' }}>
+              <UserCredentials userData={user} />
+            </Paper>
+          </Grid>
         </TabPanel>
         <TabPanel value="2">
+          <Grid item xs={12}>
+            <Paper elevation={3} style={{ padding: '20px' }}>
+              <UserProfileForm userData={user} />
+            </Paper>
+          </Grid>
+        </TabPanel>
+        <TabPanel value="3">
           <Grid item xs={12}>
             <Paper elevation={3} style={{ padding: '20px' }}></Paper>
           </Grid>
         </TabPanel>
-        <TabPanel value="3">
+        <TabPanel value="4">
           <Grid item xs={12}>
             <Paper elevation={3} style={{ padding: '20px' }}></Paper>
           </Grid>

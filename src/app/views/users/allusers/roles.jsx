@@ -95,7 +95,7 @@ const Roles = () => {
   }, []);
   const fetchUserTypes = async () => {
     try {
-      const response = await axios.get('/api/user/roles');
+      const response = await axios.get('/api/users/roles');
       if (response.status === 200) {
         setUsers(response.data.data);
         setLoading(false);
