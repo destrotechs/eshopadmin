@@ -17,6 +17,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Alert,
 } from '@mui/material';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
@@ -56,6 +57,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import UserProfileForm from './userprofile';
 import UserCredentials from './usercredentials';
+import UserOrdersForm from './orders';
 const Container = styled('div')(({ theme }) => ({
   margin: '20px',
   [theme.breakpoints.down('sm')]: { margin: '16px' },
@@ -101,7 +103,7 @@ const EditUser = () => {
       console.error('User could not be fetched');
     }
   };
-
+  console.log('roleees ', user.roles);
   return (
     <Container>
       <TabContext value={value}>
@@ -129,12 +131,41 @@ const EditUser = () => {
         </TabPanel>
         <TabPanel value="3">
           <Grid item xs={12}>
-            <Paper elevation={3} style={{ padding: '20px' }}></Paper>
+            <Paper elevation={3} style={{ padding: '20px' }}>
+              <UserOrdersForm userData={user} />
+            </Paper>
           </Grid>
         </TabPanel>
         <TabPanel value="4">
           <Grid item xs={12}>
-            <Paper elevation={3} style={{ padding: '20px' }}></Paper>
+            <Paper elevation={3} style={{ padding: '20px' }}>
+              {user.roles === null || user.roles === undefined || user.roles.length === 0 ? (
+                <Alert severity="error">{user.name} has not been allocated roles</Alert>
+              ) : (
+                <Grid item xs={3}>
+                  <TableContainer style={{ padding: '10px' }}>
+                    <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Role Name</TableCell>
+                          <TableCell align="right">Action</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {user.roles.map((role, index) => {
+                          return (
+                            <TableRow>
+                              <TableCell>{role.role_name}</TableCell>
+                              <TableCell align="right">remove</TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Grid>
+              )}
+            </Paper>
           </Grid>
         </TabPanel>
       </TabContext>

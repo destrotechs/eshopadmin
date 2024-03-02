@@ -106,14 +106,15 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
-  const register = async (email, username, password) => {
-    const response = await axios.post('/api/auth/register', {
+  const register = async (email, name, password, password_confirmation) => {
+    const response = await axios.post('/api/users/register', {
       email,
-      username,
+      name,
       password,
+      password_confirmation,
     });
 
-    const { accessToken, user } = response.data;
+    const { accessToken, user } = response.data.data;
 
     setSession(accessToken);
 

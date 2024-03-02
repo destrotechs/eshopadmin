@@ -36,7 +36,8 @@ const JWTRegister = styled(JustifyBox)(() => ({
 const initialValues = {
   email: '',
   password: '',
-  username: '',
+  password_confirmation: '',
+  name: '',
   remember: true,
 };
 
@@ -58,7 +59,7 @@ const JwtRegister = () => {
     setLoading(true);
 
     try {
-      register(values.email, values.username, values.password);
+      register(values.email, values.name, values.password, values.password_confirmation);
       navigate('/');
       setLoading(false);
     } catch (e) {
@@ -94,14 +95,14 @@ const JwtRegister = () => {
                       fullWidth
                       size="small"
                       type="text"
-                      name="username"
-                      label="Username"
+                      name="name"
+                      label="Name"
                       variant="outlined"
                       onBlur={handleBlur}
-                      value={values.username}
+                      value={values.name}
                       onChange={handleChange}
-                      helperText={touched.username && errors.username}
-                      error={Boolean(errors.username && touched.username)}
+                      helperText={touched.name && errors.name}
+                      error={Boolean(errors.name && touched.name)}
                       sx={{ mb: 3 }}
                     />
 
@@ -133,7 +134,20 @@ const JwtRegister = () => {
                       error={Boolean(errors.password && touched.password)}
                       sx={{ mb: 2 }}
                     />
-
+                    <TextField
+                      fullWidth
+                      size="small"
+                      name="password_confirmation"
+                      type="password"
+                      label="Confirm-Password"
+                      variant="outlined"
+                      onBlur={handleBlur}
+                      value={values.password_confirmation}
+                      onChange={handleChange}
+                      helperText={touched.password_confirmation && errors.password_confirmation}
+                      error={Boolean(errors.password_confirmation && touched.password_confirmation)}
+                      sx={{ mb: 2 }}
+                    />
                     <FlexBox gap={1} alignItems="center">
                       <Checkbox
                         size="small"

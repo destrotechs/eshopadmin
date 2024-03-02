@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { Paper, Grid, TextField, Button, Typography, Divider } from '@mui/material';
+import { Paper, Grid, TextField, Button, Typography, Divider, Alert } from '@mui/material';
+import { isNull } from 'lodash';
 
 const UserProfileForm = ({ userData }) => {
   const [profileInfo, setProfileInfo] = useState({
-    paymentMode: userData.profile.preferred_payment,
-    cardNumber: userData.profile.card_number,
-    phoneNumber: userData.profile.phone_number,
-    locale: userData.profile.locale,
-    cvv: userData.profile.cvv,
+    paymentMode: userData.profile === null ? null : userData.profile.preferred_payment,
+    cardNumber: userData.profile === null ? null : userData.profile.card_number,
+    phoneNumber: userData.profile === null ? null : userData.profile.phone_number,
+    locale: userData.profile === null ? null : userData.profile.locale,
+    cvv: userData.profile === null ? null : userData.profile.cvv,
   });
   const [addresses, setAddresses] = useState(userData.addresses || []);
   const handleProfileInfoChange = (field, value) => {
@@ -50,81 +51,98 @@ const UserProfileForm = ({ userData }) => {
     <Grid container spacing={3}>
       {/* First Column: User Profile Information */}
       <Grid item xs={6} spacing={2}>
-        <Typography variant="h5">User Profile Information</Typography>
-        <Divider></Divider>&nbsp;
-        <TextField
-          label="Payment Mode"
-          fullWidth
-          value={profileInfo.paymentMode}
-          onChange={(e) => handleProfileInfoChange('paymentMode', e.target.value)}
-        />
-        &nbsp;
-        <TextField
-          label="Card Number"
-          fullWidth
-          value={profileInfo.cardNumber}
-          onChange={(e) => handleProfileInfoChange('cardNumber', e.target.value)}
-        />
-        &nbsp;
-        <TextField
-          label="Phone Number"
-          fullWidth
-          value={profileInfo.phoneNumber}
-          onChange={(e) => handleProfileInfoChange('phoneNumber', e.target.value)}
-        />
-        &nbsp;
-        <TextField
-          label="Locale"
-          fullWidth
-          value={profileInfo.locale}
-          onChange={(e) => handleProfileInfoChange('locale', e.target.value)}
-        />
-        &nbsp;
-        <TextField
-          label="CVV"
-          fullWidth
-          value={profileInfo.cvv}
-          onChange={(e) => handleProfileInfoChange('cvv', e.target.value)}
-        />
-        &nbsp;
-        <Button
-          style={{ top: '20px', marginBottom: '20px' }}
-          variant="contained"
-          color="primary"
-          onClick={handleProfileInfoSubmit}
-        >
-          Update Profile Info
-        </Button>{' '}
-        &nbsp;
+        <Typography variant="h7">Profile Information</Typography>
+        {isNull(profileInfo.phoneNumber) ? (
+          <>
+            <Alert severity="error">{userData.name} Profile details are not available</Alert>
+          </>
+        ) : (
+          <>
+            <Divider></Divider>&nbsp;
+            <TextField
+              label="Payment Mode"
+              fullWidth
+              value={profileInfo.paymentMode}
+              onChange={(e) => handleProfileInfoChange('paymentMode', e.target.value)}
+            />
+            &nbsp;
+            <TextField
+              label="Card Number"
+              fullWidth
+              value={profileInfo.cardNumber}
+              onChange={(e) => handleProfileInfoChange('cardNumber', e.target.value)}
+            />
+            &nbsp;
+            <TextField
+              label="Phone Number"
+              fullWidth
+              value={profileInfo.phoneNumber}
+              onChange={(e) => handleProfileInfoChange('phoneNumber', e.target.value)}
+            />
+            &nbsp;
+            <TextField
+              label="Locale"
+              fullWidth
+              value={profileInfo.locale}
+              onChange={(e) => handleProfileInfoChange('locale', e.target.value)}
+            />
+            &nbsp;
+            <TextField
+              label="CVV"
+              fullWidth
+              value={profileInfo.cvv}
+              onChange={(e) => handleProfileInfoChange('cvv', e.target.value)}
+            />
+            &nbsp;
+            <Button
+              style={{ top: '20px', marginBottom: '20px' }}
+              variant="contained"
+              color="primary"
+              onClick={handleProfileInfoSubmit}
+            >
+              Update Profile Info
+            </Button>{' '}
+            &nbsp;
+          </>
+        )}
       </Grid>
 
       {/* Second Column: Address Information */}
       <Grid item xs={6}>
-        <Typography variant="h5">Address Information</Typography>
-        <Divider></Divider>&nbsp;
+        <Typography variant="h7">Address Information</Typography>
+
         {/* Add address input fields here */}
-        {userData.addresses.map((address, index) => {
-          return (
-            <>
-              &nbsp;
-              <TextField
-                label={getAddress(index)}
-                fullWidth
-                value={address.shipping_address}
-                onChange={(e) => handleAddressChange(index, 'shipping_address', e.target.value)}
-              />
-              &nbsp;
-            </>
-          );
-        })}
-        <Button
-          style={{ top: '20px', bottom: '20px' }}
-          variant="contained"
-          color="primary"
-          onClick={handleAddressSubmit}
-        >
-          Update Address
-        </Button>
+        {userData.address == null ? (
+          <>
+            <Alert severity="error">{userData.name} Address information is not available</Alert>
+          </>
+        ) : (
+          <>
+            <Divider></Divider>&nbsp;
+            {userData.addresses.map((address, index) => {
+              return (
+                <>
+                  &nbsp;
+                  <TextField
+                    label={getAddress(index)}
+                    fullWidth
+                    value={address.shipping_address}
+                    onChange={(e) => handleAddressChange(index, 'shipping_address', e.target.value)}
+                  />
+                  &nbsp;
+                </>
+              );
+            })}
+            <Button
+              style={{ top: '20px', bottom: '20px' }}
+              variant="contained"
+              color="primary"
+              onClick={handleAddressSubmit}
+            >
+              Update Address
+            </Button>
+          </>
+        )}
       </Grid>
     </Grid>
     // </Paper>
