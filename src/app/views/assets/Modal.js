@@ -30,7 +30,6 @@ import axios from 'axios.js';
 
 import Field from './field';
 import MessageAlert from './MessageAlert';
-import ErrorAlert from './ErrorAlert';
 function Modal({
   open,
   onClose,
