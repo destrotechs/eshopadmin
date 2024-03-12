@@ -41,7 +41,6 @@ function Field({
   type = 'show',
 }) {
   const [sourcedata, setSourcedata] = useState([]);
-  console.log('field data', field_data);
   const fetchData = async (url) => {
     if (url) {
       const response = await axios.get(url);
@@ -58,7 +57,6 @@ function Field({
   }, []);
 
   if (field_type === 'text' && type !== 'hidden') {
-    // console.log('TEXTTTTTT', form_value);
     return (
       <Grid item xs={12} sm={4} md={span}>
         <TextField
@@ -69,12 +67,10 @@ function Field({
           sx={{ m: 1 }}
           value={value || ''}
           onChange={(e) => onChange(name, e.target.value)}
-          //   style={{ display: type === 'hidden' ? 'none' : 'block' }}
         />
       </Grid>
     );
   } else if (field_type === 'password' && type !== 'hidden') {
-    // console.log('TEXTTTTTT', form_value);
     return (
       <Grid item xs={12} sm={4} md={span}>
         <TextField
@@ -91,7 +87,6 @@ function Field({
       </Grid>
     );
   } else if (field_type === 'email') {
-    // console.log('TEXTTTTTT', form_value);
     return (
       <Grid item xs={12} sm={4} md={span}>
         <TextField
@@ -108,7 +103,6 @@ function Field({
       </Grid>
     );
   } else if (field_type === 'text' && type === 'hidden') {
-    console.log('TEXTTTTTT', form_value);
     return (
       <Grid item xs={12} sm={4} md={span}>
         <TextField

@@ -39,7 +39,6 @@ function Modal({
   form_fields = [],
   isEditMode = false,
 }) {
-  console.log('Fields', form_fields);
   const [fields, setFields] = useState(form_fields);
   const [formData, setFormData] = useState({});
   const theme = useTheme();
@@ -64,8 +63,6 @@ function Modal({
   useEffect(() => {
     // Trigger the initial onChange event with default values
     form_fields.forEach((field) => {
-      console.log('FRIEEEEEE', field.value);
-
       (field.type === 'hidden' || field.form_value) &&
         handleFieldChange(field.name, field.form_value); // Provide the initial value here if needed
     });
@@ -75,19 +72,14 @@ function Modal({
       ...formData,
       [fieldName]: value,
     }));
-    console.log('form data', formData);
   };
 
   const handleSave = async () => {
     setFields((prevFields) => [...prevFields, formData]);
-    // console.log("Submitted data ",fields)
-    console.log('Submitted data ', formData);
     //handle sub,mit to server
     try {
       const response = await axios[actions.method](actions.url, formData);
-      console.log('Server Response ', response);
       if (response.status !== 200) {
-        console.error('ERROR: ', response);
         setMessage(response.message ? response.message : response);
         setSeverity('error');
         setOpenSnack(true);
@@ -101,7 +93,6 @@ function Modal({
       setMessage(response.data.message);
       setOpenSnack(true);
     } catch (error) {
-      console.error('Error', error);
       setMessage('An error occured while saving: ' + error.message ? error.message : error);
       setSeverity('error');
       setOpenSnack(true);
