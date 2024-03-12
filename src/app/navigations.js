@@ -61,7 +61,7 @@ export const navigations = [
         icon: 'user',
       },
       {
-        name: 'User and Roles',
+        name: 'Users',
         iconText: 'R',
         path: '/user/roles',
         // icon: 'cautionAltIcon',

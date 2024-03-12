@@ -236,6 +236,7 @@ const EditProduct = () => {
             <Tab label="Product Details" value="1" />
             <Tab label="Product Images" value="2" />
             <Tab label="product STOCKs" value="3" />
+            <Tab label="product promotion" value="4" />
           </TabList>
         </Box>
         <TabPanel value="1">
@@ -473,6 +474,126 @@ const EditProduct = () => {
                           </TableRow>
                         ))
                       : ''}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Paper>
+          </Grid>
+        </TabPanel>
+        <TabPanel value="4">
+          <Grid item xs={12}>
+            <Paper elevation={3} style={{ padding: '20px' }}>
+              <IconButton
+                className="button"
+                color="success"
+                aria-label="Success"
+                onClick={handleOpenModal}
+              >
+                <Icon>add</Icon>
+              </IconButton>
+              <TableContainer>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>#</TableCell>
+                      <TableCell>Promotion Attributes</TableCell>
+                      <TableCell align="left">Type</TableCell>
+                      <TableCell align="left">Value</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>1</TableCell>
+                      <TableCell>Discount</TableCell>
+                      <TableCell>
+                        <FormControl fullWidth>
+                          <InputLabel id="demo-simple-select-label">Discount Type</InputLabel>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Discount"
+                            value={editedData.discount_type}
+                            name={'discount_type'}
+                            onChange={handleInputChange}
+                          >
+                            <MenuItem value="percentage">Percentage</MenuItem>
+                            <MenuItem value="figure">Figure</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </TableCell>
+                      <TableCell>
+                        <TextField
+                          label="Discount value"
+                          fullWidth
+                          margin="normal"
+                          name="discount"
+                          value={editedData.discount}
+                          onChange={handleInputChange}
+                          autoFocus
+                        />
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>2.</TableCell>
+                      <TableCell>Offset</TableCell>
+                      <TableCell>
+                        <FormControl fullWidth>
+                          <InputLabel id="demo-simple-select-label">Offset Type</InputLabel>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Offset Type"
+                            value={editedData.offset_type}
+                            name={'offset_type'}
+                            onChange={handleInputChange}
+                          >
+                            <MenuItem value="percentage">Percentage</MenuItem>
+                            <MenuItem value="figure">Figure</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </TableCell>
+                      <TableCell>
+                        <TextField
+                          label="Offset value"
+                          fullWidth
+                          margin="normal"
+                          name="offset"
+                          value={editedData.offset}
+                          onChange={handleInputChange}
+                          autoFocus
+                        />
+                      </TableCell>
+                    </TableRow>
+                    {/* <TableRow>
+                    <TableCell>Discount</TableCell>
+                    <TableCell>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">Tags type</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          label="Discount"
+                          value={editedData.discount}
+                          name={'discount'}
+                          onChange={handleInputChange}
+                        >
+                          <MenuItem value="percentage">Percentage</MenuItem>
+                          <MenuItem value="figure">Figure</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </TableCell>
+                    <TableCell>
+                      <TextField
+                        label="Discount value"
+                        fullWidth
+                        margin="normal"
+                        name="offset"
+                        value={editedData.offset}
+                        onChange={handleInputChange}
+                        autoFocus
+                      />
+                    </TableCell>
+                    </TableRow> */}
                   </TableBody>
                 </Table>
               </TableContainer>
