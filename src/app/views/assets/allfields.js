@@ -60,6 +60,7 @@ const all_fields_array = [
     //(3) create user role fields
     { id: 'Right To', name: 'right_to', field_type: 'text', span: 12 },
   ],
+
   [
     //(4) another one
     {
@@ -110,6 +111,23 @@ const all_fields_array = [
     },
     {
       id: 'Assign Role',
+      field_type: 'select',
+      span: 12,
+      name: 'role_id',
+      source: { url: '/api/users/roles', value: 'id', name: 'role_name' },
+    },
+  ],
+  [
+    //6 assign user roles
+    {
+      id: 'User',
+      field_type: 'text',
+      span: 6,
+      type: 'hidden',
+      name: 'user_id',
+    },
+    {
+      id: 'Select a Role',
       field_type: 'select',
       span: 12,
       name: 'role_id',

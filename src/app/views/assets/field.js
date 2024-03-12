@@ -117,9 +117,12 @@ function Field({
           label={id}
           variant="outlined"
           sx={{ m: 1 }}
-          value={form_value || ''}
-          onChange={(e) => onChange(name, e.target.value)}
-          style={{ display: type === 'hidden' ? 'none' : 'block' }}
+          value={value || ''}
+          InputProps={{
+            readOnly: true,
+          }}
+          // onChange={(e) => onChange(name, e.target.value)}
+          // style={{ display: type === 'hidden' ? 'none' : 'block' }}
         />
       </Grid>
     );

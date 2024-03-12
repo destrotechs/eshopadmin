@@ -178,11 +178,14 @@ const EditProduct = () => {
         fetchProduct();
       } else {
         console.log('File Upload Response ', uploadResponse);
-        setOpenError(true);
-        // setErrorMessage(uploadResponse.)
+        setMessage(uploadResponse.message ? uploadResponse.message : uploadResponse);
+        setSeverity('error');
+        setOpenSnack(true);
       }
-    } catch {
-      setOpenError(true);
+    } catch (error) {
+      setMessage(error.message ? error.message : error);
+      setSeverity('error');
+      setOpenSnack(true);
     }
 
     // console.log('File Upload Response ', uploadResponse);

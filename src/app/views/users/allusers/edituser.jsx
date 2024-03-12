@@ -58,6 +58,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import UserProfileForm from './userprofile';
 import UserCredentials from './usercredentials';
 import UserOrdersForm from './orders';
+import all_fields_array from '../../assets/allfields';
 const Container = styled('div')(({ theme }) => ({
   margin: '20px',
   [theme.breakpoints.down('sm')]: { margin: '16px' },
@@ -97,13 +98,69 @@ const EditUser = () => {
   const fetchUser = async () => {
     const response = await axios.get('/api/user/' + userId.id);
     if (response.status === 200) {
-      console.log('User Info', response);
       setUser(response.data.data);
     } else {
-      console.error('User could not be fetched');
     }
   };
-  console.log('roleees ', user.roles);
+  const [opendelete, setOpenDelete] = useState(false);
+
+  const [roleToDelete, setRoleToDelete] = useState({});
+  const [opensnack, setOpenSnack] = useState(false);
+
+  const [message, setMessage] = useState('');
+  const [formData, setFormData] = useState({
+    user_id: '',
+    role_id: '',
+    // Add other form fields as needed
+  });
+  const handleDeleteClick = (role) => {
+    setRoleToDelete(role);
+    setFormData({ user_id: parseInt(userId.id), role_id: role.id });
+    setOpenDelete(true);
+  };
+  const closeDelete = () => {
+    setOpenDelete(false);
+  };
+  const handleOnDelete = async () => {
+    //logic to delete
+    const response = await axios.post('/api/roles/remove', formData);
+    if (response.status === 200) {
+      setMessage(response.data.message);
+      setOpenSnack(true);
+      fetchUser();
+    }
+  };
+  const handleCloseSNack = () => {
+    setOpenSnack(false);
+  };
+
+  const [open, setOpen] = useState(false);
+  const assign_fields = [
+    {
+      id: 'User',
+      field_type: 'text',
+      span: 6,
+      type: 'hidden',
+      form_value: parseInt(userId.id),
+      name: 'user_id',
+    },
+    {
+      id: 'Select a Role',
+      field_type: 'select',
+      span: 12,
+      name: 'role_id',
+      source: { url: '/api/users/roles', value: 'id', name: 'role_name' },
+    },
+  ];
+  const modal_actions = { method: 'post', url: '/api/user/assign/roles' };
+  const handleOpenModal = () => {
+    setOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    // fetchStocks();
+    setOpen(false);
+  };
   return (
     <Container>
       <TabContext value={value}>
@@ -138,7 +195,15 @@ const EditUser = () => {
         </TabPanel>
         <TabPanel value="4">
           <Grid item xs={12}>
-            <Paper elevation={3} style={{ padding: '20px' }}>
+            <Paper xs={6} elevation={3} style={{ padding: '20px' }}>
+              <IconButton
+                className="button"
+                color="success"
+                aria-label="Success"
+                onClick={handleOpenModal}
+              >
+                <Icon>add</Icon>
+              </IconButton>
               {user.roles === null || user.roles === undefined || user.roles.length === 0 ? (
                 <Alert severity="error">{user.name} has not been allocated roles</Alert>
               ) : (
@@ -147,6 +212,7 @@ const EditUser = () => {
                     <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
                       <TableHead>
                         <TableRow>
+                          <TableCell>#</TableCell>
                           <TableCell>Role Name</TableCell>
                           <TableCell align="right">Action</TableCell>
                         </TableRow>
@@ -155,8 +221,18 @@ const EditUser = () => {
                         {user.roles.map((role, index) => {
                           return (
                             <TableRow>
+                              <TableCell>{index + 1}</TableCell>
                               <TableCell>{role.role_name}</TableCell>
-                              <TableCell align="right">remove</TableCell>
+                              <TableCell align="right">
+                                <IconButton
+                                  className="button"
+                                  onClick={() => handleDeleteClick(role)}
+                                  color="error"
+                                  aria-label="Delete"
+                                >
+                                  <Icon>delete</Icon>
+                                </IconButton>
+                              </TableCell>
                             </TableRow>
                           );
                         })}
@@ -169,6 +245,25 @@ const EditUser = () => {
           </Grid>
         </TabPanel>
       </TabContext>
+      <ConfirmDeleteDialog
+        open={opendelete}
+        onClose={closeDelete}
+        onDelete={handleOnDelete}
+        itemName={roleToDelete.role_name}
+      />
+      <MessageAlert
+        open={opensnack}
+        onClose={handleCloseSNack}
+        message={message}
+        severity="success"
+      />
+      <Modal
+        open={open}
+        onClose={handleCloseModal}
+        title={'Assign user a role'}
+        form_fields={assign_fields}
+        actions={modal_actions}
+      />
     </Container>
   );
 };

@@ -30,7 +30,7 @@ import axios from 'axios.js';
 
 import Field from './field';
 import MessageAlert from './MessageAlert';
-
+import ErrorAlert from './ErrorAlert';
 function Modal({
   open,
   onClose,
@@ -47,6 +47,7 @@ function Modal({
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [severity, setSeverity] = useState('success');
   const [opensnack, setOpenSnack] = useState(false);
+  const [openError, setOpenError] = useState(false);
   const [message, setMessage] = useState('');
 
   const handleCloseSNack = () => {
@@ -54,6 +55,12 @@ function Modal({
   };
   const handleOpenSNack = () => {
     setOpenSnack(true);
+  };
+  const handleCloseError = () => {
+    setOpenError(false);
+  };
+  const handleOpenError = () => {
+    setOpenError(true);
   };
   useEffect(() => {
     // Trigger the initial onChange event with default values
@@ -79,12 +86,29 @@ function Modal({
     // console.log("Submitted data ",fields)
     console.log('Submitted data ', formData);
     //handle sub,mit to server
-    const response = await axios[actions.method](actions.url, formData);
-    console.log('Server Response ', response);
-    setFormData({});
-    setSeverity('success');
-    setMessage(response.data.message);
-    setOpenSnack(true);
+    try {
+      const response = await axios[actions.method](actions.url, formData);
+      console.log('Server Response ', response);
+      if (response.status !== 200) {
+        console.error('ERROR: ', response);
+        setMessage(response.message ? response.message : response);
+        setSeverity('error');
+        setOpenSnack(true);
+      } else if (!response) {
+        setMessage('An error occured while saving: ');
+        setSeverity('error');
+        setOpenSnack(true);
+      }
+      setFormData({});
+      setSeverity('success');
+      setMessage(response.data.message);
+      setOpenSnack(true);
+    } catch (error) {
+      console.error('Error', error);
+      setMessage('An error occured while saving: ' + error.message ? error.message : error);
+      setSeverity('error');
+      setOpenSnack(true);
+    }
   };
   return (
     <div>
