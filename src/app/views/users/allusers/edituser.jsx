@@ -158,7 +158,7 @@ const EditUser = () => {
   };
 
   const handleCloseModal = () => {
-    // fetchStocks();
+    fetchUser()
     setOpen(false);
   };
   return (

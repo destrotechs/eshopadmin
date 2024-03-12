@@ -66,10 +66,8 @@ function Modal({
     form_fields.forEach((field) => {
       console.log('FRIEEEEEE', field.value);
 
-      handleFieldChange(
-        field.name,
-        field.form_value !== null || field.form_value !== undefined ? field.form_value : field.value
-      ); // Provide the initial value here if needed
+      (field.type === 'hidden' || field.form_value) &&
+        handleFieldChange(field.name, field.form_value); // Provide the initial value here if needed
     });
   }, [form_fields]);
   const handleFieldChange = (fieldName, value) => {
