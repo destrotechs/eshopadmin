@@ -77,6 +77,8 @@ export const navigations = [
   },
   { label: 'Customer Management', type: 'label' },
   { name: 'Customers', path: '/customers/all', iconText: 'C', icon: 'personAltIcon' },
+  { label: 'Payment Management', type: 'label' },
+  { name: 'Payment Modes', path: '/payment/modes', iconText: '$', icon: 'dollarAltIcon' },
 
   { name: 'Orders', path: '/orders/all', iconText: 'O', icon: 'cartAltIcon' },
 

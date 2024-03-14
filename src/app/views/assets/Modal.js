@@ -100,7 +100,7 @@ function Modal({
   };
   return (
     <div>
-      <Dialog maxWidth="md" fullWidth open={open} onClose={onClose}>
+      <Dialog maxWidth="md" maxHeight="auto" fullWidth open={open} onClose={onClose}>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2}>

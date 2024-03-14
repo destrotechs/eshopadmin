@@ -134,5 +134,20 @@ const all_fields_array = [
       source: { url: '/api/users/roles', value: 'id', name: 'role_name' },
     },
   ],
+  [
+    //7 add payment mode fielss
+    {
+      id: 'Payment Mode Name',
+      field_type: 'text',
+      span: 12,
+      name: 'payment_mode_name',
+    },
+    {
+      id: 'Payment Details Requirements (seperated by comma e.g mobile_number,country_code)',
+      field_type: 'textarea',
+      span: 12,
+      name: 'payment_mode_details',
+    },
+  ],
 ];
 export default all_fields_array;

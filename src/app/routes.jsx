@@ -8,6 +8,7 @@ import { Navigate } from 'react-router-dom';
 import MatxLayout from './components/MatxLayout/MatxLayout';
 import userRoutes from './views/users/userRoutes';
 import productRoutes from './views/products/productsroutes';
+import modesRoutes from './views/payments/modesRoutes'
 const routes = [
   {
     element: (
@@ -15,7 +16,13 @@ const routes = [
         <MatxLayout />
       </AuthGuard>
     ),
-    children: [...dashboardRoutes, ...userRoutes, ...materialRoutes,...productRoutes],
+    children: [
+      ...dashboardRoutes,
+      ...userRoutes,
+      ...materialRoutes,
+      ...productRoutes,
+      ...modesRoutes,
+    ],
   },
   ...sessionRoutes,
   { path: '/', element: <Navigate to="dashboard/default" /> },

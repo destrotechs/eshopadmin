@@ -70,6 +70,21 @@ function Field({
         />
       </Grid>
     );
+  } else if (field_type === 'textarea') {
+    return (
+      <Grid item xs={12} sm={4} md={span}>
+        <TextField
+          fullWidth
+          id="outlined-multiline-static"
+          label={id}
+          multiline
+          rows={4}
+          sx={{ m: 1 }}
+          value={value || ''}
+          onChange={(e) => onChange(name, e.target.value)}
+        />
+      </Grid>
+    );
   } else if (field_type === 'password' && type !== 'hidden') {
     return (
       <Grid item xs={12} sm={4} md={span}>
