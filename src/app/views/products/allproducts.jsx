@@ -10,7 +10,7 @@ import Modal from '../assets/Modal';
 // import EditUser from "./edituser";
 import ConfirmDeleteDialog from '../assets/confirmdeletedialog';
 import MessageAlert from '../assets/MessageAlert';
-
+import StockBadge from '../assets/stockBadge';
 const Container = styled('div')(({ theme }) => ({
   margin: '20px',
   [theme.breakpoints.down('sm')]: { margin: '16px' },
@@ -92,7 +92,7 @@ const Products = () => {
         customBodyRender: (value, tableMeta) => {
           const product = products[tableMeta.rowIndex];
           const available = product.stock;
-          return available > 0 ? `In stock (${available})` : 'Out Of Stock';
+          return <StockBadge value={available} />;
         },
       },
     },
