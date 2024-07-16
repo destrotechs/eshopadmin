@@ -131,6 +131,20 @@ function Field({
         />
       </Grid>
     );
+  } else if (field_type === 'text' && type === 'readonly') {
+    return (
+      <Grid item xs={12} sm={4} md={span}>
+        <TextField
+          fullWidth
+          id="outlined-basic"
+          label={id}
+          variant="outlined"
+          sx={{ m: 1 }}
+          value={value || form_value}
+          // style={{ display: type === 'hidden' ? 'none' : 'block' }}
+        />
+      </Grid>
+    );
   } else if (field_type === 'file') {
     return (
       <Grid item xs={12} sm={4} md={span}>

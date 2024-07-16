@@ -160,6 +160,7 @@ const Categories = () => {
     fields.map((field) => {
       if (item.hasOwnProperty(field.name)) {
         field['value'] = item[field.name];
+        field['type'] = 'readonly';
         console.log('New field', field);
       }
     });

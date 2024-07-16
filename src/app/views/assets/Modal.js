@@ -63,7 +63,7 @@ function Modal({
   useEffect(() => {
     // Trigger the initial onChange event with default values
     form_fields.forEach((field) => {
-      (field.type === 'hidden' || field.form_value) &&
+      (field.type === 'hidden' || field.form_value || field.type === 'readonly') &&
         handleFieldChange(field.name, field.form_value); // Provide the initial value here if needed
     });
   }, [form_fields]);

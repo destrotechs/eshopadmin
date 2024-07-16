@@ -153,6 +153,8 @@ const EditProduct = () => {
     // After saving, exit edit mode
     if (editResponse.status === 200) {
       setMessage(editResponse.data.message);
+      setSeverity('success');
+
       setOpenSnack(true);
 
       fetchProduct();
@@ -174,6 +176,7 @@ const EditProduct = () => {
       });
       if (uploadResponse.status === 200) {
         setMessage(uploadResponse.data.message);
+        setSeverity('success');
         setOpenSnack(true);
         fetchProduct();
       } else {

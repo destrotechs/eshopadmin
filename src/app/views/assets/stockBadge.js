@@ -4,10 +4,10 @@ import Chip from '@mui/material/Chip';
 const StockBadge = ({ value }) => {
   let color = 'error';
   let stock_message = '';
-  if (value <= 3) {
+  if (value === 0) {
     color = 'error';
     stock_message = 'out of stock';
-  } else if (value >= 4 && value < 10) {
+  } else if (value >= 1 && value < 10) {
     color = 'warning';
     stock_message = value + ' available';
   } else if (value >= 10 && value <= 20) {
