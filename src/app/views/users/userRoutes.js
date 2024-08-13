@@ -9,6 +9,7 @@ const RoleRights = Loadable(lazy(() => import('./allusers/role_rights')));
 const Rights = Loadable(lazy(() => import('./allusers/rights')));
 const EditUser = Loadable(lazy(() => import('./allusers/edituser')));
 const Orders = Loadable(lazy(() => import('./orders')));
+const Order = Loadable(lazy(() => import('./vieworder')));
 
 const userRoutes = [
   {
@@ -38,6 +39,10 @@ const userRoutes = [
   {
     path: '/orders/all',
     element: <Orders />,
+  },
+  {
+    path: '/order/:id',
+    element: <Order />,
   },
   {
     path: '/user/edit/:id',

@@ -112,11 +112,11 @@ const AppUsers = () => {
   ];
   const [edit, goToEdit] = useState(false);
   const handleEditClick = (user) => {
-    goToEdit(true);
-    console.log('User ', user);
-    if (goToEdit) {
-      return <Navigate to="/users/edit" />;
-    }
+    // goToEdit(true);
+    // console.log('User ', user);
+    // if (goToEdit) {
+    //   return <Navigate to="/user/edit" />;
+    // }
   };
 
   useEffect(() => {
