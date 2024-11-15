@@ -1,156 +1,182 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Fab, Icon, IconButton, styled } from '@mui/material';
-import { SimpleCard } from 'app/components';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Select,
+  MenuItem,
+  Grid,
+  styled,
+  Typography,
+  Chip, // Import Chip for payment status badges
+} from '@mui/material';
 import MUIDataTable from 'mui-datatables';
-import axios from 'axios.js';
-import { StyledButton } from '../material-kit/buttons/buttonBase';
-import { useNavigate } from 'react-router-dom';
-
-// import EditUser from "./edituser";
-
-const Container = styled('div')(({ theme }) => ({
-  margin: '20px',
-  [theme.breakpoints.down('sm')]: { margin: '16px' },
-  '& .breadcrumb': {
-    marginBottom: '30px',
-    [theme.breakpoints.down('sm')]: { marginBottom: '16px' },
-  },
+import { Container } from '@mui/system';
+import apiClient from '../../auth/apiClient';
+import OrderDetailsModal from './ordersDetailModal'; // Import the modal component
+import CurrencyFormatter from '../assets/currency';
+const StyledContainer = styled(Container)(({ theme }) => ({
+  margin: theme.spacing(3),
+  '& .MuiTypography-h6': { marginBottom: theme.spacing(2) },
 }));
 
 const Orders = () => {
-  // const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const columns = [
-    {
-      name: 'Number',
-      options: {
-        filter: true,
-        customBodyRender: (value, tableMeta) => {
-          const order = orders[tableMeta.rowIndex];
-          const num = order.order_number ? order.order_number : '';
-          return num ? num : '';
-        },
-      },
-    },
-    {
-      name: 'Owner (Customer)',
-      options: {
-        filter: true,
-        customBodyRender: (value, tableMeta) => {
-          const product = orders[tableMeta.rowIndex];
-          const name = product.owner.name;
-          return name ? name : '';
-        },
-      },
-    },
-    {
-      name: 'Ordered Items',
-      options: {
-        filter: true,
-        customBodyRender: (value, tableMeta) => {
-          const product = orders[tableMeta.rowIndex];
-          const description = product.description;
-          return description ? description : '';
-        },
-      },
-    },
-    {
-      name: 'Date ordered',
-      options: {
-        filter: true,
-        customBodyRender: (value, tableMeta) => {
-          const product = orders[tableMeta.rowIndex];
-          const available = product.created_at;
-          return available ? available : '';
-        },
-      },
-    },
-    {
-      name: 'Shipping Address',
-      options: {
-        filter: true,
-        customBodyRender: (value, tableMeta) => {
-          const product = orders[tableMeta.rowIndex];
-          const warranty = product.shipping_address.shipping_address;
-          return warranty ? warranty : '';
-        },
-      },
-    },
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [status, setStatus] = useState('');
+  const [openOrderDetailsModal, setOpenOrderDetailsModal] = useState(false);
 
+  const columns = [
+    { name: 'order_number', label: 'Order Number' },
+    { name: 'customer', label: 'Customer' },
+    {
+      name: 'total_cost',
+      label: 'Total Cost',
+      options: {
+        customBodyRenderLite: (dataIndex) => {
+          return <CurrencyFormatter value={orders[dataIndex].total_cost} />;
+        },
+      },
+    },
+    {
+      name: 'total_paid',
+      label: 'Total Paid',
+      options: {
+        customBodyRenderLite: (dataIndex) => {
+          const totalPaid = orders[dataIndex].payments.reduce(
+            (sum, payment) => sum + parseFloat(payment.amount),
+            0
+          );
+          return <CurrencyFormatter value={totalPaid} />;
+        },
+      },
+    },
+    {
+      name: 'payment_status',
+      label: 'Payment Status',
+      options: {
+        customBodyRenderLite: (dataIndex) => {
+          const totalPaid = orders[dataIndex].payments.reduce(
+            (sum, payment) => sum + parseFloat(payment.amount),
+            0
+          );
+          const totalCost = orders[dataIndex].total_cost;
+          const paymentStatus =
+            totalPaid >= totalCost ? 'Paid' : totalPaid > 0 ? 'Partially Paid' : 'Not Paid';
+
+          return getStatusBadge(paymentStatus); // Get status badge
+        },
+      },
+    },
+    { name: 'status', label: 'Status' },
     {
       name: 'Actions',
       options: {
-        filter: false,
-        sort: false,
-        empty: true,
-        customBodyRender: (value, tableMeta) => {
-          const order = orders[tableMeta.rowIndex];
-          const orderid = order.id;
-
-          return (
-            <div>
-              <IconButton
-                className="button"
-                onClick={() => handleViewClick(order)}
-                color="primary"
-                aria-label="Edit"
-              >
-                <Icon>edit</Icon>
-              </IconButton>
-            </div>
-          );
-        },
+        customBodyRenderLite: (dataIndex) => (
+          <Button
+            variant="outlined"
+            onClick={() => handleViewOrder(orders[dataIndex].order_number)}
+          >
+            View Order
+          </Button>
+        ),
       },
     },
-    // Add more columns as needed
   ];
-  const navigate = useNavigate();
-  const [edit, goToEdit] = useState(false);
-  const handleViewClick = (order) => {
-    console.log(order);
-    goToEdit(true);
-    if (goToEdit) {
-      return navigate('/order/' + order.id);
-    }
+
+  const handleViewOrder = (orderId) => {
+    const order = orders.find((o) => o.order_number === orderId);
+    setSelectedOrder(order);
+    setStatus(order.status); // Initialize the status for editing
+    setOpenOrderDetailsModal(true); // Open the modal to view order details
+  };
+
+  const handleCloseOrderDetailsModal = () => {
+    setOpenOrderDetailsModal(false); // Close the modal
+    setSelectedOrder(null); // Clear the selected order
+  };
+
+  const handleOpenReviewModal = (item) => {
+    // Handle opening the review modal for the item
+    console.log('Open review modal for:', item);
   };
 
   useEffect(() => {
     fetchOrders();
   }, []);
+
   const fetchOrders = async () => {
     try {
-      const response = await axios.get('/api/orders');
+      const response = await apiClient.get('/api/orders');
       if (response.status === 200) {
         setOrders(response.data.data);
-        setLoading(false);
-        console.log('response ', response.data.data);
-        console.log('Orders ', orders);
       } else {
-        alert('Orders could not be fetched');
+        console.error('Orders could not be fetched');
       }
     } catch (error) {
-      console.log('There was an error in fetching orders', error);
+      console.error('Error fetching orders:', error);
+    } finally {
       setLoading(false);
     }
   };
 
+  const handleStatusChange = (event) => {
+    setStatus(event.target.value);
+  };
+
+  const handleSaveStatus = async () => {
+    // Make API call to update status
+    try {
+      await apiClient.put(`/api/orders/${selectedOrder.order_number}`, { status });
+      setSelectedOrder(null); // Close modal after saving
+      fetchOrders(); // Refresh the order list
+    } catch (error) {
+      console.error('Error updating status:', error);
+    }
+  };
+
+  // Function to return payment status badge
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case 'Paid':
+        return <Chip label="Paid" style={{ backgroundColor: '#4caf50', color: 'white' }} />;
+      case 'Partially Paid':
+        return (
+          <Chip label="Partially Paid" style={{ backgroundColor: '#ff9800', color: 'white' }} />
+        );
+      case 'Not Paid':
+        return <Chip label="Not Paid" style={{ backgroundColor: '#f44336', color: 'white' }} />;
+      default:
+        return <Chip label="Unknown" style={{ backgroundColor: '#9e9e9e', color: 'white' }} />;
+    }
+  };
+
   const options = {
-    filterType: 'checkbox',
+    filter: true,
     responsive: 'standard',
-    setHeaderStyle: {
-      fontWeight: 'bold',
-    },
+    selectableRows: 'none',
   };
 
   return (
-    <Container>
+    <StyledContainer>
+      <Typography variant="h6">Order List</Typography>
       {loading ? (
-        <div>Loading...</div>
+        <CircularProgress />
       ) : (
-        <MUIDataTable title={'All Orders'} data={orders} columns={columns} options={options} />
+        <MUIDataTable data={orders} columns={columns} options={options} />
       )}
-    </Container>
+
+      {/* Order Details Modal */}
+      {selectedOrder && (
+        <OrderDetailsModal
+          selectedOrder={selectedOrder}
+          open={openOrderDetailsModal}
+          onClose={handleCloseOrderDetailsModal}
+          handleOpenReviewModal={handleOpenReviewModal}
+        />
+      )}
+    </StyledContainer>
   );
 };
 
