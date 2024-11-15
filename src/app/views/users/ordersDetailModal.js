@@ -49,7 +49,10 @@ const OrderDetailsModal = ({ selectedOrder, open, onClose, handleOpenReviewModal
   // Save changes to the order status
   const handleSaveChanges = async () => {
     try {
-      await apiClient.put(`/orders/${selectedOrder.order_number}`, { status: orderStatus });
+      const response = await apiClient.put(`/api/order/update/${selectedOrder.id}`, {
+        status: orderStatus,
+      });
+      console.log('status changes response', response);
       setStatusChanged(false); // Reset the status change flag after saving
     } catch (error) {
       console.error('Error updating order status:', error);

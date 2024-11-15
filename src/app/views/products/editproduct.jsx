@@ -507,10 +507,10 @@ const EditProduct = () => {
                   <TableBody>
                     <TableRow>
                       <TableCell>1</TableCell>
-                      <TableCell>Discount</TableCell>
+                      <TableCell>Discount (%)</TableCell>
                       <TableCell>
                         <TextField
-                          label="Discount value"
+                          label="Discount % value"
                           fullWidth
                           margin="normal"
                           name="discount"
@@ -519,16 +519,17 @@ const EditProduct = () => {
                         />
                       </TableCell>
                     </TableRow>
+
                     <TableRow>
                       <TableCell>2</TableCell>
-                      <TableCell>Offset</TableCell>
+                      <TableCell>Tag (Featured or deals)</TableCell>
                       <TableCell>
                         <TextField
-                          label="Offset value"
+                          label="Tag"
                           fullWidth
                           margin="normal"
-                          name="offset"
-                          value={editedData.offset}
+                          name="tags"
+                          value={editedData.tags}
                           onChange={handleInputChange}
                         />
                       </TableCell>
