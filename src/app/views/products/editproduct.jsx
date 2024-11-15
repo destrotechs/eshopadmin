@@ -231,6 +231,7 @@ const EditProduct = () => {
     fetchStocks();
     setOpen(false);
   };
+
   return (
     <Container>
       <TabContext value={value}>
@@ -500,7 +501,6 @@ const EditProduct = () => {
                     <TableRow>
                       <TableCell>#</TableCell>
                       <TableCell>Promotion Attributes</TableCell>
-                      <TableCell align="left">Type</TableCell>
                       <TableCell align="left">Value</TableCell>
                     </TableRow>
                   </TableHead>
@@ -509,22 +509,6 @@ const EditProduct = () => {
                       <TableCell>1</TableCell>
                       <TableCell>Discount</TableCell>
                       <TableCell>
-                        <FormControl fullWidth>
-                          <InputLabel id="demo-simple-select-label">Discount Type</InputLabel>
-                          <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            label="Discount"
-                            value={editedData.discount_type}
-                            name={'discount_type'}
-                            onChange={handleInputChange}
-                          >
-                            <MenuItem value="percentage">Percentage</MenuItem>
-                            <MenuItem value="figure">Figure</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </TableCell>
-                      <TableCell>
                         <TextField
                           label="Discount value"
                           fullWidth
@@ -532,29 +516,12 @@ const EditProduct = () => {
                           name="discount"
                           value={editedData.discount}
                           onChange={handleInputChange}
-                          autoFocus
                         />
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>2.</TableCell>
+                      <TableCell>2</TableCell>
                       <TableCell>Offset</TableCell>
-                      <TableCell>
-                        <FormControl fullWidth>
-                          <InputLabel id="demo-simple-select-label">Offset Type</InputLabel>
-                          <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            label="Offset Type"
-                            value={editedData.offset_type}
-                            name={'offset_type'}
-                            onChange={handleInputChange}
-                          >
-                            <MenuItem value="percentage">Percentage</MenuItem>
-                            <MenuItem value="figure">Figure</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </TableCell>
                       <TableCell>
                         <TextField
                           label="Offset value"
@@ -563,43 +530,20 @@ const EditProduct = () => {
                           name="offset"
                           value={editedData.offset}
                           onChange={handleInputChange}
-                          autoFocus
                         />
                       </TableCell>
                     </TableRow>
-                    {/* <TableRow>
-                    <TableCell>Discount</TableCell>
-                    <TableCell>
-                      <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">Tags type</InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          label="Discount"
-                          value={editedData.discount}
-                          name={'discount'}
-                          onChange={handleInputChange}
-                        >
-                          <MenuItem value="percentage">Percentage</MenuItem>
-                          <MenuItem value="figure">Figure</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </TableCell>
-                    <TableCell>
-                      <TextField
-                        label="Discount value"
-                        fullWidth
-                        margin="normal"
-                        name="offset"
-                        value={editedData.offset}
-                        onChange={handleInputChange}
-                        autoFocus
-                      />
-                    </TableCell>
-                    </TableRow> */}
                   </TableBody>
                 </Table>
               </TableContainer>
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ marginTop: '20px' }}
+                onClick={handleSaveChanges}
+              >
+                Submit Changes
+              </Button>
             </Paper>
           </Grid>
         </TabPanel>
