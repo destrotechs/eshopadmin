@@ -1,6 +1,8 @@
 import { Box, Card, Grid, Icon, IconButton, styled, Tooltip } from '@mui/material';
+import apiClient from 'app/auth/apiClient';
 import { Small } from 'app/components/Typography';
-
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
   flexWrap: 'wrap',
@@ -28,12 +30,40 @@ const Heading = styled('h6')(({ theme }) => ({
 }));
 
 const StatCards = () => {
+  const [dashboardData, setDashboardData] = useState({});
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+  const navigate = useNavigate();
+  const fetchDashboardData = async () => {
+    const response = await apiClient.get('/api/dashboard/data');
+    if (response.status === 200) {
+      console.log('DASH RES', response);
+      setDashboardData(response.data.data);
+    }
+  };
+
+  const { confirmedOrders, weeklySales, newCustomers } = dashboardData;
   const cardList = [
-    { name: 'New Leads', amount: 3050, icon: 'group' },
-    { name: 'This week Sales', amount: '$80,500', icon: 'attach_money' },
-    { name: 'Inventory Status', amount: '8.5% Stock Surplus', icon: 'store' },
-    { name: 'Orders to deliver', amount: '305 Orders', icon: 'shopping_cart' },
+    { name: 'New Customers', amount: newCustomers, icon: 'group', path: null },
+    { name: 'This week Sales', amount: `${weeklySales}`, icon: 'attach_money', path: null },
+    { name: 'Inventory Status', amount: '8.5% Stock Surplus', icon: 'store', path: null },
+    {
+      name: 'Orders to deliver',
+      amount: `${confirmedOrders} Orders`,
+      icon: 'shopping_cart',
+      path: 'orders/all',
+    },
   ];
+  const handleLinkNav = (path) => {
+    if (path) {
+      const absolutePath = path.startsWith('/') ? path : `/${path}`;
+      console.log('Navigating to:', absolutePath);
+      navigate(absolutePath);
+    } else {
+      console.log('No path provided for navigation');
+    }
+  };
 
   return (
     <Grid container spacing={3} sx={{ mb: '24px' }}>
@@ -49,9 +79,13 @@ const StatCards = () => {
             </ContentBox>
 
             <Tooltip title="View Details" placement="top">
-              <IconButton>
+              {/* {item.path !== null && (
+                <Link to={`${item.path}`}> */}
+              <IconButton onClick={() => handleLinkNav(item.path)} disabled={!item.path}>
                 <Icon>arrow_right_alt</Icon>
               </IconButton>
+              {/* </Link>
+              )} */}
             </Tooltip>
           </StyledCard>
         </Grid>

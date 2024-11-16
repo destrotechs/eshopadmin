@@ -15,7 +15,9 @@ import {
   useTheme,
 } from '@mui/material';
 import { Paragraph } from 'app/components/Typography';
-
+import React, { useState, useEffect } from 'react';
+import apiClient from 'app/auth/apiClient';
+import { Link } from 'react-router-dom';
 const CardHeader = styled(Box)(() => ({
   display: 'flex',
   paddingLeft: '24px',
@@ -60,7 +62,17 @@ const TopSellingTable = () => {
   const bgError = palette.error.main;
   const bgPrimary = palette.primary.main;
   const bgSecondary = palette.secondary.main;
+  const [topselling, setTopSelling] = useState([]);
 
+  useEffect(() => {
+    fetchTopSelling();
+  }, []);
+  const fetchTopSelling = async () => {
+    const response = await apiClient.get('/api/dashboard/topselling');
+    if (response.status === 200) {
+      setTopSelling(response.data.data);
+    }
+  };
   return (
     <Card elevation={3} sx={{ pt: '20px', mb: 3 }}>
       <CardHeader>
@@ -91,23 +103,26 @@ const TopSellingTable = () => {
           </TableHead>
 
           <TableBody>
-            {productList.map((product, index) => (
+            {topselling.map((product, index) => (
               <TableRow key={index} hover>
                 <TableCell colSpan={4} align="left" sx={{ px: 0, textTransform: 'capitalize' }}>
                   <Box display="flex" alignItems="center">
-                    <Avatar src={product.imgUrl} />
-                    <Paragraph sx={{ m: 0, ml: 4 }}>{product.name}</Paragraph>
+                    <Avatar src={product.product.images[0].img_url} />
+                    <Paragraph sx={{ m: 0, ml: 4 }}>{product.product.name}</Paragraph>
                   </Box>
                 </TableCell>
 
                 <TableCell align="left" colSpan={2} sx={{ px: 0, textTransform: 'capitalize' }}>
-                  ${product.price > 999 ? (product.price / 1000).toFixed(1) + 'k' : product.price}
+                  $
+                  {product.product.price > 999
+                    ? ((product.product.price * product.quantity) / 1000).toFixed(1) + 'k'
+                    : product.product.price * product.quantity}
                 </TableCell>
 
                 <TableCell sx={{ px: 0 }} align="left" colSpan={2}>
-                  {product.available ? (
-                    product.available < 20 ? (
-                      <Small bgcolor={bgSecondary}>{product.available} available</Small>
+                  {product.product.stock ? (
+                    product.product.stock < 20 ? (
+                      <Small bgcolor={bgSecondary}>{product.product.stock} available</Small>
                     ) : (
                       <Small bgcolor={bgPrimary}>in stock</Small>
                     )
@@ -117,9 +132,11 @@ const TopSellingTable = () => {
                 </TableCell>
 
                 <TableCell sx={{ px: 0 }} colSpan={1}>
-                  <IconButton>
-                    <Icon color="primary">edit</Icon>
-                  </IconButton>
+                  <Link to={`/edit/product/${product.product.id}`}>
+                    <IconButton>
+                      <Icon color="primary">edit</Icon>
+                    </IconButton>
+                  </Link>
                 </TableCell>
               </TableRow>
             ))}
@@ -129,38 +146,5 @@ const TopSellingTable = () => {
     </Card>
   );
 };
-
-const productList = [
-  {
-    imgUrl: '/assets/images/products/headphone-2.jpg',
-    name: 'earphone',
-    price: 100,
-    available: 15,
-  },
-  {
-    imgUrl: '/assets/images/products/headphone-3.jpg',
-    name: 'earphone',
-    price: 1500,
-    available: 30,
-  },
-  {
-    imgUrl: '/assets/images/products/iphone-2.jpg',
-    name: 'iPhone x',
-    price: 1900,
-    available: 35,
-  },
-  {
-    imgUrl: '/assets/images/products/iphone-1.jpg',
-    name: 'iPhone x',
-    price: 100,
-    available: 0,
-  },
-  {
-    imgUrl: '/assets/images/products/headphone-3.jpg',
-    name: 'Head phone',
-    price: 1190,
-    available: 5,
-  },
-];
 
 export default TopSellingTable;

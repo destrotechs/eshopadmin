@@ -33,6 +33,37 @@ export const navigations = [
   //     { name: 'Table', path: '/material/table', iconText: 'T' },
   //   ],
   // },
+  { label: 'Product Management', type: 'label' },
+  {
+    name: 'Products',
+    icon: 'inventoryAltIcon',
+    children: [
+      {
+        name: 'Category List',
+        path: '/categories/all',
+        iconText: 'C',
+        icon: 'categoryAltIcon',
+      },
+      {
+        name: 'Sub-Category List',
+        path: '/subcategories/all',
+        iconText: 'C',
+        icon: 'categoryAltIcon',
+      },
+      {
+        name: 'Products List',
+        path: '/products/all',
+        iconText: 'C',
+        icon: 'listAltIcon',
+      },
+    ],
+  },
+
+  { label: 'Payment Management', type: 'label' },
+  { name: 'Payment Modes', path: '/payment/modes', iconText: '$', icon: 'dollarAltIcon' },
+
+  { name: 'Orders', path: '/orders/all', iconText: 'O', icon: 'cartAltIcon' },
+  { name: 'Payments', path: '/payments/all', iconText: 'O', icon: 'cartAltIcon' },
   { label: 'System Administration', type: 'label' },
 
   {
@@ -77,37 +108,7 @@ export const navigations = [
   },
   { label: 'Customer Management', type: 'label' },
   { name: 'Customers', path: '/customers/all', iconText: 'C', icon: 'personAltIcon' },
-  { label: 'Payment Management', type: 'label' },
-  { name: 'Payment Modes', path: '/payment/modes', iconText: '$', icon: 'dollarAltIcon' },
 
-  { name: 'Orders', path: '/orders/all', iconText: 'O', icon: 'cartAltIcon' },
-  { name: 'Payments', path: '/payments/all', iconText: 'O', icon: 'cartAltIcon' },
-
-  { label: 'Product Management', type: 'label' },
-  {
-    name: 'Products',
-    icon: 'inventoryAltIcon',
-    children: [
-      {
-        name: 'Category List',
-        path: '/categories/all',
-        iconText: 'C',
-        icon: 'categoryAltIcon',
-      },
-      {
-        name: 'Sub-Category List',
-        path: '/subcategories/all',
-        iconText: 'C',
-        icon: 'categoryAltIcon',
-      },
-      {
-        name: 'Products List',
-        path: '/products/all',
-        iconText: 'C',
-        icon: 'listAltIcon',
-      },
-    ],
-  },
   {
     name: 'Documentation',
     icon: 'launch',
