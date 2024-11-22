@@ -34,6 +34,8 @@ import { StyledButton } from '../material-kit/buttons/buttonBase';
 import { useNavigate, useParams } from 'react-router-dom';
 import Modal from '../assets/Modal';
 import NumberBadge from '../assets/Badge';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 // import { useHistory } from 'react-router-dom';
 // import EditUser from "./edituser";
 import ConfirmDeleteDialog from '../assets/confirmdeletedialog';
@@ -286,7 +288,7 @@ const EditProduct = () => {
                   onChange={handleInputChange}
                   autoFocus
                 />
-                <TextField
+                {/* <TextField
                   label="Description"
                   fullWidth
                   margin="normal"
@@ -294,6 +296,14 @@ const EditProduct = () => {
                   value={editedData.description}
                   onChange={handleInputChange}
                   autoFocus
+                /> */}
+                <ReactQuill
+                  value={editedData.description || ''} // Ensure no null/undefined value is passed
+                  onChange={(value) =>
+                    setEditedData((prevData) => ({ ...prevData, description: value }))
+                  }
+                  placeholder="Type the product description here..."
+                  className="mb-4"
                 />
                 <TextField
                   label="Price"

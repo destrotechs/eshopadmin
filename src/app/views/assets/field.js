@@ -27,6 +27,8 @@ import {
 } from '@mui/material';
 import CurrencyFormatter from './currency';
 import axios from 'axios.js';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 function Field({
   field_type,
@@ -206,6 +208,24 @@ function Field({
           </FormControl>
         </Grid>
       </>
+    );
+  } else if (field_type === 'description') {
+    return (
+      <Grid item xs={12} sm={4} md={12} className="mt-2">
+        <label style={{ marginBottom: '8px', display: 'block', fontWeight: 'bold' }}>{id}</label>
+        <ReactQuill
+          value={value || ''}
+          onChange={(content) => onChange(name, content)} // Capture HTML directly
+          placeholder="Type the product description here..."
+          style={{
+            backgroundColor: '#fff',
+            borderRadius: '4px',
+            border: '1px solid #c4c4c4',
+            minHeight: '150px',
+          }}
+          className="mb-4"
+        />
+      </Grid>
     );
   }
   return null;

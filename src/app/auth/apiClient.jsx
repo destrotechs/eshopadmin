@@ -9,7 +9,7 @@ export const setMessageAlertFunction = (alertFunction) => {
 
 // Create an Axios instance
 const apiClient = axios.create({
-  baseURL: 'http://127.0.0.1:8001/', // Change to localhost
+  baseURL: 'http://192.168.100.36:8001/', // Change to localhost
   withCredentials: true, // Ensures cookies are sent with the request
 });
 
@@ -36,7 +36,9 @@ apiClient.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.error('Response error:', error);
+    const { status, data } = error.response;
+    console.error('Response error:', error.response);
+    // console.log('RESPONSE:', response);
 
     // Use the showMessageAlert function if available
     if (showMessageAlert) {

@@ -11,6 +11,7 @@ import Modal from '../assets/Modal';
 import ConfirmDeleteDialog from '../assets/confirmdeletedialog';
 import MessageAlert from '../assets/MessageAlert';
 import StockBadge from '../assets/stockBadge';
+import OutputContent from '../assets/product_description';
 const Container = styled('div')(({ theme }) => ({
   margin: '20px',
   [theme.breakpoints.down('sm')]: { margin: '16px' },
@@ -68,12 +69,15 @@ const Products = () => {
       options: {
         filter: true,
         customBodyRender: (value, tableMeta) => {
-          const product = products[tableMeta.rowIndex];
+          const product = products[tableMeta.rowIndex]; // Access the product for the current row
           const description = product.description;
-          return description ? description : '';
+
+          // Render rich HTML content
+          return <OutputContent htmlContent={description || 'No description available'} />;
         },
       },
     },
+
     {
       name: 'Price',
       options: {
@@ -266,7 +270,7 @@ const Products = () => {
     },
     {
       id: 'Description',
-      field_type: 'text',
+      field_type: 'description',
       span: 6,
       name: 'description',
     },
