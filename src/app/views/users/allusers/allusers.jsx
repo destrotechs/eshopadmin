@@ -4,7 +4,7 @@ import { SimpleCard } from 'app/components';
 import MUIDataTable from 'mui-datatables';
 import axios from 'axios.js';
 import { StyledButton } from '../../material-kit/buttons/buttonBase';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 import EditUser from './edituser';
 
@@ -110,13 +110,10 @@ const AppUsers = () => {
     },
     // Add more columns as needed
   ];
+  const navigate = useNavigate();
   const [edit, goToEdit] = useState(false);
   const handleEditClick = (user) => {
-    // goToEdit(true);
-    // console.log('User ', user);
-    // if (goToEdit) {
-    //   return <Navigate to="/user/edit" />;
-    // }
+    return navigate('/user/edit/' + user.id);
   };
 
   useEffect(() => {

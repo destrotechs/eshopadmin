@@ -3,6 +3,7 @@ import { Paper, Grid, TextField, Button, Typography, Divider, Alert } from '@mui
 import { isNull } from 'lodash';
 
 const UserProfileForm = ({ userData }) => {
+  console.log('User info', userData);
   const [profileInfo, setProfileInfo] = useState({
     paymentMode: userData.profile === null ? null : userData.profile.preferred_payment,
     cardNumber: userData.profile === null ? null : userData.profile.card_number,

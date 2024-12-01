@@ -20,8 +20,9 @@ const StyledContainer = styled(Container)(({ theme }) => ({
   '& .MuiTypography-h6': { marginBottom: theme.spacing(2) },
 }));
 
-const Orders = () => {
-  const [orders, setOrders] = useState([]);
+const Orders = ({ specific_orders = [] }) => {
+  console.log('Specific orders', specific_orders);
+  const [orders, setOrders] = useState(specific_orders);
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [status, setStatus] = useState('');
@@ -103,10 +104,18 @@ const Orders = () => {
   };
 
   useEffect(() => {
+    if (specific_orders) {
+      setOrders(specific_orders);
+      setLoading(false);
+      return;
+    }
     fetchOrders();
   }, []);
 
   const fetchOrders = async () => {
+    if (specific_orders) {
+      return;
+    }
     try {
       const response = await apiClient.get('/api/orders');
       if (response.status === 200) {

@@ -265,6 +265,7 @@ const OrderDetailsModal = ({ selectedOrder, open, onClose, handleOpenReviewModal
                 <TableCell>Price</TableCell>
                 <TableCell>Total</TableCell>
                 <TableCell>Discount</TableCell>
+                <TableCell>Color</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
@@ -282,6 +283,7 @@ const OrderDetailsModal = ({ selectedOrder, open, onClose, handleOpenReviewModal
                     <CurrencyFormatter value={parseInt(item.total) || 0} />
                   </TableCell>
                   <TableCell>{item.discount || 0}%</TableCell>
+                  <TableCell>{item.color_option}</TableCell>
                   <TableCell>
                     <Button
                       variant="outlined"

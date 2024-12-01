@@ -57,8 +57,9 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import UserProfileForm from './userprofile';
 import UserCredentials from './usercredentials';
-import UserOrdersForm from './orders';
+import Orders from '../orders';
 import all_fields_array from '../../assets/allfields';
+import UserAddresses from './userAddress';
 const Container = styled('div')(({ theme }) => ({
   margin: '20px',
   [theme.breakpoints.down('sm')]: { margin: '16px' },
@@ -158,7 +159,7 @@ const EditUser = () => {
   };
 
   const handleCloseModal = () => {
-    fetchUser()
+    fetchUser();
     setOpen(false);
   };
   return (
@@ -166,8 +167,8 @@ const EditUser = () => {
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <TabList onChange={handleChange} aria-label="lab API tabs example">
-            <Tab label="Credentials" value="1" />
-            <Tab label="Profile" value="2" />
+            <Tab label="Profile" value="1" />
+            <Tab label="Addresses" value="5" />
             <Tab label="Orders" value="3" />
             <Tab label="Roles" value="4" />
           </TabList>
@@ -179,19 +180,12 @@ const EditUser = () => {
             </Paper>
           </Grid>
         </TabPanel>
-        <TabPanel value="2">
-          <Grid item xs={12}>
-            <Paper elevation={3} style={{ padding: '20px' }}>
-              <UserProfileForm userData={user} />
-            </Paper>
-          </Grid>
-        </TabPanel>
         <TabPanel value="3">
-          <Grid item xs={12}>
-            <Paper elevation={3} style={{ padding: '20px' }}>
-              <UserOrdersForm userData={user} />
-            </Paper>
-          </Grid>
+          {/* <Grid item xs={12}> */}
+          {/* <Paper elevation={3} style={{ padding: '20px' }}> */}
+          <Orders specific_orders={user?.orders} />
+          {/* </Paper> */}
+          {/* </Grid> */}
         </TabPanel>
         <TabPanel value="4">
           <Grid item xs={12}>
@@ -241,6 +235,13 @@ const EditUser = () => {
                   </TableContainer>
                 </Grid>
               )}
+            </Paper>
+          </Grid>
+        </TabPanel>
+        <TabPanel value="5">
+          <Grid item xs={12}>
+            <Paper elevation={3} style={{ padding: '20px' }}>
+              <UserAddresses user_addresses={user.addresses} />
             </Paper>
           </Grid>
         </TabPanel>

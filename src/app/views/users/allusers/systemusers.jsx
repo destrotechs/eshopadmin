@@ -4,7 +4,7 @@ import { SimpleCard } from 'app/components';
 import MUIDataTable from 'mui-datatables';
 import axios from 'axios.js';
 import { StyledButton } from '../../material-kit/buttons/buttonBase';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import all_fields_array from 'app/views/assets/allfields';
 import EditUser from './edituser';
 import Modal from '../../assets/Modal';
@@ -30,6 +30,7 @@ const SystemUsers = () => {
       <Icon>add</Icon>
     </IconButton>
   );
+  const navigate = useNavigate();
   const handleOpenModal = () => {
     setOpen(true);
   };
@@ -127,11 +128,7 @@ const SystemUsers = () => {
   ];
   const [edit, goToEdit] = useState(false);
   const handleEditClick = (user) => {
-    goToEdit(true);
-    console.log('User ', user);
-    if (goToEdit) {
-      return <Navigate to="/users/edit" />;
-    }
+    return navigate('/user/edit/' + user.id);
   };
 
   useEffect(() => {
