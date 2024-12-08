@@ -534,14 +534,19 @@ const EditProduct = () => {
                       <TableCell>2</TableCell>
                       <TableCell>Tag (Featured or deals)</TableCell>
                       <TableCell>
-                        <TextField
-                          label="Tag"
-                          fullWidth
-                          margin="normal"
-                          name="tags"
-                          value={editedData.tags}
-                          onChange={handleInputChange}
-                        />
+                        <FormControl fullWidth style={{ borderTop: '20px' }}>
+                          <InputLabel id="demo-simple-select-label">Tag</InputLabel>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            name="tags"
+                            value={editedData.tags}
+                            onChange={handleInputChange}
+                          >
+                            <MenuItem value="featured">Featured</MenuItem>
+                            <MenuItem value="deals">Deals</MenuItem>
+                          </Select>
+                        </FormControl>
                       </TableCell>
                     </TableRow>
                   </TableBody>

@@ -9,6 +9,7 @@ import {
   useTheme,
   Alert,
   Snackbar,
+  CircularProgress,
 } from '@mui/material';
 import { SimpleCard } from 'app/components';
 import MUIDataTable from 'mui-datatables';
@@ -227,7 +228,7 @@ const Categories = () => {
   return (
     <Container>
       {loading ? (
-        <div>Loading...</div>
+        <CircularProgress />
       ) : (
         <MUIDataTable
           title={'All Categories'}

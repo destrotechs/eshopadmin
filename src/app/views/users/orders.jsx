@@ -104,7 +104,7 @@ const Orders = ({ specific_orders = [] }) => {
   };
 
   useEffect(() => {
-    if (specific_orders) {
+    if (specific_orders && specific_orders.length > 0) {
       setOrders(specific_orders);
       setLoading(false);
       return;
@@ -113,9 +113,6 @@ const Orders = ({ specific_orders = [] }) => {
   }, []);
 
   const fetchOrders = async () => {
-    if (specific_orders) {
-      return;
-    }
     try {
       const response = await apiClient.get('/api/orders');
       if (response.status === 200) {

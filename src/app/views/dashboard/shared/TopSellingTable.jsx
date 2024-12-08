@@ -63,22 +63,33 @@ const TopSellingTable = () => {
   const bgPrimary = palette.primary.main;
   const bgSecondary = palette.secondary.main;
   const [topselling, setTopSelling] = useState([]);
+  const [month, setMonth] = useState();
 
   useEffect(() => {
     fetchTopSelling();
   }, []);
-  const fetchTopSelling = async () => {
-    const response = await apiClient.get('/api/dashboard/topselling');
+  const fetchTopSelling = async (selected_month = 'current') => {
+    console.log('selected ', selected_month);
+
+    const response = await apiClient.get('/api/dashboard/topselling/' + selected_month);
     if (response.status === 200) {
       setTopSelling(response.data.data);
     }
+  };
+  const handleMonthSwitch = (selected_month) => {
+    setMonth(selected_month);
+    fetchTopSelling(selected_month);
   };
   return (
     <Card elevation={3} sx={{ pt: '20px', mb: 3 }}>
       <CardHeader>
         <Title>top selling products</Title>
-        <Select size="small" defaultValue="this_month">
-          <MenuItem value="this_month">This Month</MenuItem>
+        <Select
+          size="small"
+          defaultValue="current"
+          onChange={(e) => handleMonthSwitch(e.target.value)}
+        >
+          <MenuItem value="current">This Month</MenuItem>
           <MenuItem value="last_month">Last Month</MenuItem>
         </Select>
       </CardHeader>
@@ -113,7 +124,7 @@ const TopSellingTable = () => {
                 </TableCell>
 
                 <TableCell align="left" colSpan={2} sx={{ px: 0, textTransform: 'capitalize' }}>
-                  $
+                  KES&nbsp;
                   {product.product.price > 999
                     ? ((product.product.price * product.quantity) / 1000).toFixed(1) + 'k'
                     : product.product.price * product.quantity}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Fab, Icon, IconButton, styled } from '@mui/material';
+import { Box, Button, CircularProgress, Fab, Icon, IconButton, styled } from '@mui/material';
 import { SimpleCard } from 'app/components';
 import MUIDataTable from 'mui-datatables';
 import axios from 'axios.js';
@@ -293,7 +293,7 @@ const Products = () => {
   return (
     <Container>
       {loading ? (
-        <div>Loading...</div>
+        <CircularProgress />
       ) : (
         <MUIDataTable title={'All Products'} data={products} columns={columns} options={options} />
       )}

@@ -19,7 +19,9 @@ const App = () => {
   });
 
   const showMessageAlert = (message, severity = 'success') => {
-    setAlert({ open: true, message, severity });
+    if (message != '') {
+      setAlert({ open: true, message, severity });
+    }
   };
 
   // Inject the showMessageAlert function into axiosInstance

@@ -58,17 +58,6 @@ const AppUsers = () => {
       },
     },
     {
-      name: 'Preferred Payment',
-      options: {
-        filter: true,
-        customBodyRender: (value, tableMeta) => {
-          const customer = users[tableMeta.rowIndex];
-          const preferredPayment = customer.profile ? customer.profile.preferred_payment : '';
-          return preferredPayment ? preferredPayment : '';
-        },
-      },
-    },
-    {
       name: 'Phone Number',
       options: {
         filter: true,

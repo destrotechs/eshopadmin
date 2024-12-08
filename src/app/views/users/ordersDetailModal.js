@@ -160,7 +160,7 @@ const OrderDetailsModal = ({ selectedOrder, open, onClose, handleOpenReviewModal
             <TableHead>
               <TableRow>
                 <TableCell
-                  colSpan={2}
+                  colSpan={3}
                   align="center"
                   sx={{ fontWeight: 'bold', fontSize: '1.2rem' }}
                 >
@@ -171,32 +171,38 @@ const OrderDetailsModal = ({ selectedOrder, open, onClose, handleOpenReviewModal
             <TableBody>
               <TableRow>
                 <TableCell>Order Number:</TableCell>
-                <TableCell>{selectedOrder.order_number}</TableCell>
+                <TableCell colSpan={2}>{selectedOrder.order_number}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Customer:</TableCell>
-                <TableCell>{selectedOrder.customer}</TableCell>
+                <TableCell colSpan={2}>{selectedOrder.customer}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Order Date:</TableCell>
-                <TableCell>{new Date(selectedOrder.order_date).toLocaleString()}</TableCell>
+                <TableCell colSpan={2}>
+                  {new Date(selectedOrder.order_date).toLocaleString()}
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Shipping Address:</TableCell>
-                <TableCell>{selectedOrder.shipping_address?.shipping_address}</TableCell>
+                <TableCell colSpan={2}>
+                  {selectedOrder.shipping_address?.shipping_address}
+                </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>Total Cost:</TableCell>
-                <TableCell>
+                <TableCell colSpan={1}>Total Cost:</TableCell>
+                <TableCell colSpan={2}>
                   <CurrencyFormatter value={parseInt(selectedOrder.total_cost) || 0} />
                 </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Payment Status:</TableCell>
                 <TableCell>
-                  <PaymentStatusBadge totalPaid={totalPaid} totalCost={selectedOrder.total_cost} />
+                  <PaymentStatusBadge totalPaid={totalPaid} totalCost={selectedOrder.total_cost} />{' '}
+                </TableCell>
+                <TableCell>
                   {totalPaid === selectedOrder.total_cost && (
-                    <Box mt={3} display="flex" justifyContent="center">
+                    <Box>
                       <Button
                         className="sm"
                         variant="contained"
@@ -211,11 +217,11 @@ const OrderDetailsModal = ({ selectedOrder, open, onClose, handleOpenReviewModal
               </TableRow>
               <TableRow>
                 <TableCell>Payment Mode:</TableCell>
-                <TableCell>{selectedOrder.payment_mode?.payment_mode_name}</TableCell>
+                <TableCell colSpan={2}>{selectedOrder.payment_mode?.payment_mode_name}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Amount Paid:</TableCell>
-                <TableCell>
+                <TableCell colSpan={2}>
                   <CurrencyFormatter value={totalPaid} />
                 </TableCell>
               </TableRow>

@@ -206,18 +206,20 @@ const EditUser = () => {
                     <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
                       <TableHead>
                         <TableRow>
-                          <TableCell>#</TableCell>
-                          <TableCell>Role Name</TableCell>
-                          <TableCell align="right">Action</TableCell>
+                          <TableCell colSpan={1}>#</TableCell>
+                          <TableCell colSpan={2}>Role Name</TableCell>
+                          <TableCell align="right" colSpan={2}>
+                            Action
+                          </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
                         {user.roles.map((role, index) => {
                           return (
                             <TableRow>
-                              <TableCell>{index + 1}</TableCell>
-                              <TableCell>{role.role_name}</TableCell>
-                              <TableCell align="right">
+                              <TableCell colSpan={1}>{index + 1}</TableCell>
+                              <TableCell colSpan={2}>{role.role_name}</TableCell>
+                              <TableCell colSpan={2} align="right">
                                 <IconButton
                                   className="button"
                                   onClick={() => handleDeleteClick(role)}
