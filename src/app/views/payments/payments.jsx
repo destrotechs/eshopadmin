@@ -31,8 +31,9 @@ const Payments = () => {
         ),
       },
     },
-    { name: 'payment_mode', label: 'Payment Mode ID' },
+    { name: 'payment_mode', label: 'Payment Mode' },
     { name: 'payment_id', label: 'Payment ID' },
+    { name: 'mobile_phone', label: 'Mobile Number' },
     { name: 'paid_on', label: 'Paid On' },
     {
       name: 'Actions',
